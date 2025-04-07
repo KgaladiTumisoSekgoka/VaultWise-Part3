@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Chart">
+
+    <ImageButton
+        android:id="@+id/imageButton9"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="76dp"
+        android:background="@null"
+        android:contentDescription="Home"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/home" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Charts"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.459"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton8"
+        android:layout_width="71dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="182dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginBottom="128dp"
+        android:background="@null"
+        android:contentDescription="FAB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.791"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_add_circle_24" />
+
+    <ImageButton
+        android:id="@+id/imageButton11"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="76dp"
+        android:background="@null"
+        android:contentDescription="Chart"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton12"
+        app:srcCompat="@drawable/pie_chart" />
+
+    <ImageButton
+        android:id="@+id/imageButton12"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="76dp"
+        android:background="@null"
+        android:contentDescription="More Options"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/menu" />
+
+    <ImageButton
+        android:id="@+id/imageButton10"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="76dp"
+        android:background="@null"
+        android:contentDescription="Transactions"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton9"
+        app:srcCompat="@drawable/currency" />
+
+    <com.anychart.AnyChartView
+        android:id="@+id/anyChartView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginVertical="20sp"
+        android:layout_marginBottom="104dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
