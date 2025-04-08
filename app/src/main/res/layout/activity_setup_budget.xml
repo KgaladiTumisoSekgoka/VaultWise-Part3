@@ -37,10 +37,10 @@
         android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="77dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="220dp"
         android:fontFamily="@font/poppins"
-        android:text="Enter Minimum Budget Goal"
+        android:text="Enter Budget"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
@@ -49,28 +49,16 @@
         android:id="@+id/editTextNumber2"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="84dp"
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:fontFamily="@font/poppins"
         android:inputType="number"
-        android:text="enter budget goal here"
+        android:text="enter budget here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
-    <EditText
-        android:id="@+id/editTextNumber3"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginEnd="92dp"
-        android:backgroundTint="#FCF5FD"
-        android:ems="10"
-        android:fontFamily="@font/poppins"
-        android:inputType="number"
-        android:text="enter budget goal here"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
     <Button
         android:id="@+id/button11"
@@ -86,29 +74,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button10" />
 
+
     <Button
         android:id="@+id/button10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="51dp"
+        android:layout_marginTop="68dp"
         android:layout_marginEnd="156dp"
         android:backgroundTint="#0446FD"
         android:text="SUBMIT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber3" />
-
-    <TextView
-        android:id="@+id/textView28"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="72dp"
-        android:fontFamily="@font/poppins"
-        android:text="Enter Maximum Budget Goal"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumber2" />
 
     <ImageView
