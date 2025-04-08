@@ -1,6 +1,5 @@
 package com.example.loginsignup
 
-import ColourObject
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -9,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.example.loginsignup.ColourObject
+
 
 class ColourSpinnerAdapter(context: Context, list: List<ColourObject>) :
     ArrayAdapter<ColourObject>(context, 0, list) {

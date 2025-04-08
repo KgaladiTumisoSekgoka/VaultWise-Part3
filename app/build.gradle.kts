@@ -19,6 +19,7 @@ android {
 
     buildFeatures{
         viewBinding = true
+        dataBinding = true
     }
 
     buildTypes {
@@ -46,6 +47,12 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.entity.extraction)
+    implementation(libs.filament.android)
+    implementation(libs.androidx.scenecore)
+    implementation(libs.engage.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

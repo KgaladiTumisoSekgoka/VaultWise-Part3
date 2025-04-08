@@ -1,6 +1,6 @@
 package com.example.loginsignup
 
-import ColourObject
+import com.example.loginsignup.ColourObject
 import android.content.Intent
 import android.os.Bundle
 import android.view.View

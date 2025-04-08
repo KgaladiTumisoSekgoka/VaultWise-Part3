@@ -1,6 +1,5 @@
 package com.example.loginsignup
-
-import ColourObject
+import com.example.loginsignup.ColourObject
 
 class ColourList {
     private val blackHex ="000000"
