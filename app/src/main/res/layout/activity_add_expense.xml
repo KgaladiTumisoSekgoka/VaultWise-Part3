@@ -7,26 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".AddExpense">
 
-    <!-- Title TextView -->
-
-    <!-- Title EditText -->
-
-    <!-- Description EditText -->
-
-    <!-- Category Spinner -->
-
-    <!-- Custom Category Button -->
-
-    <!-- Attach File TextView -->
-
-    <!-- Attach File Name EditText -->
-
-    <!-- Attach File Icon (File Icon) -->
-
-    <!-- Attach Photo Button -->
-
-    <!-- Submit Button -->
-
     <ImageButton
         android:id="@+id/imageButton19"
         android:layout_width="48dp"
@@ -118,9 +98,9 @@
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Custom Category"
+        android:layout_marginTop="76dp"
         android:backgroundTint="#0446FD"
+        android:text="Custom Category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner2" />
@@ -154,12 +134,12 @@
         android:id="@+id/imageButton23"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="76dp"
         android:layout_marginEnd="18dp"
         android:background="@null"
         android:contentDescription="Attach File"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView19"
         app:layout_constraintTop_toBottomOf="@+id/spinner2"
         app:srcCompat="@drawable/attach_document" />
@@ -176,5 +156,34 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="47dp"
+        android:Description="Date"
+        android:backgroundTint="#FCF5FD"
+        android:ems="10"
+        android:inputType="date"
+        android:text="Date"
+        app:layout_constraintEnd_toStartOf="@+id/editTextTime"
+        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+    <EditText
+        android:id="@+id/editTextTime"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:Description="Time"
+        android:backgroundTint="#FCF5FD"
+        android:ems="10"
+        android:inputType="time"
+        android:text="Time"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
