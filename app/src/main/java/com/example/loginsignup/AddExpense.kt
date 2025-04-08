@@ -1,8 +1,11 @@
 package com.example.loginsignup
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
@@ -11,17 +14,36 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.loginsignup.databinding.ActivityAddExpenseBinding
 import com.google.android.material.textfield.TextInputLayout
 
 class AddExpense : AppCompatActivity() {
 
     private lateinit var filePickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var fileNameDisplay: EditText
+    private lateinit var binding: ActivityAddExpenseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_expense)
+
+        binding = ActivityAddExpenseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //Ask for Camera Permission
+        val cameraProviderResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        )
+        {
+            if(it.resultCode == Activity.RESULT_OK && it.data != null){
+                var bitmap = it.data!!.extras?.get("data") as Bitmap
+                binding.imgCameraImage.setImageBitmap(bitmap)
+            }
+        }
+        binding.imageButton20.setOnClickListener(){
+            var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraProviderResult.launch(intent)
+        }
 
         val btnAttach = findViewById<ImageButton>(R.id.imageButton23)
         fileNameDisplay = findViewById(R.id.textView19)

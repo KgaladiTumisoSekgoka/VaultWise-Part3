@@ -184,4 +184,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
+    <ImageView
+        android:id="@+id/imgCameraImage"
+        android:layout_width="129dp"
+        android:layout_height="112dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="17dp"
+        android:background="#CCCCCC"
+        android:contentDescription="Camera Image Preview"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
