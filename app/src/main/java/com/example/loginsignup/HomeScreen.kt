@@ -34,7 +34,7 @@ class HomeScreen : AppCompatActivity()
 
         val btnBudgetGoalSetup = findViewById<ImageButton>(R.id.imageButton22)
         btnBudgetGoalSetup.setOnClickListener {
-            val intent = Intent(this, SetupBudget::class.java)
+            val intent = Intent(this, BudgetGoalSetup::class.java)
             startActivity(intent)
         }
         val btnTransact = findViewById<ImageButton>(R.id.imageButton4)

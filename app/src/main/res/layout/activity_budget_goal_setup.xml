@@ -37,40 +37,25 @@
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="192dp"
-        android:layout_marginEnd="160dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="48dp"
         android:fontFamily="@font/poppins"
-        android:text="Enter budget Name"
+        android:text="Update Minimum Budget Goal"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
-
-    <EditText
-        android:id="@+id/editTextText5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="52dp"
-        android:backgroundTint="#FCF5FD"
-        android:ems="10"
-        android:fontFamily="@font/poppins"
-        android:inputType="text"
-        android:text="enter budget name here"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <TextView
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="144dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="48dp"
         android:fontFamily="@font/poppins"
-        android:text="Enter Budget Amount"
+        android:text="Update Maximum Budget Goal"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal2" />
 
     <EditText
         android:id="@+id/editTextNumber"
@@ -82,7 +67,7 @@
         android:ems="10"
         android:fontFamily="@font/poppins"
         android:inputType="number"
-        android:text="enter budget amount"
+        android:hint="update maximum spending here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
@@ -127,5 +112,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textView14"
         app:srcCompat="@drawable/budget" />
 
+    <EditText
+        android:id="@+id/editTextNumberDecimal2"
+        android:layout_width="259dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="92dp"
+        android:backgroundTint="#FCF5FD"
+        android:hint="update minimum spending here"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
