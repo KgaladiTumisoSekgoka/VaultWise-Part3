@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
 }
 
 android {
@@ -63,5 +64,13 @@ dependencies {
         exclude(group = "com.android.support")  // Exclude old support libraries
     }
     implementation("androidx.multidex:multidex:2.0.1")
+
+    //Roomdb dependency
+    implementation("androidx.room:room-runtime:2.7.0")
+    annotationProcessor("androidx.room:room-compiler:2.7.0")
+
+    //Kotlin support
+    implementation("androidx.room:room-ktx:2.7.0")
+    kapt("androidx.room:room-compiler:2.7.0")
 
 }
