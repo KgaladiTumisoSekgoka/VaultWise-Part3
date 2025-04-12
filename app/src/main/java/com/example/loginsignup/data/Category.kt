@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )],
     indices = [Index("user_id")])
-public data class Category (
+data class Category (
     @PrimaryKey(autoGenerate = true) val category_id: Int = 0,
     @ColumnInfo(name = "category_name") val category_name: String,
     @ColumnInfo(name = "user_id") val user_id: Int
