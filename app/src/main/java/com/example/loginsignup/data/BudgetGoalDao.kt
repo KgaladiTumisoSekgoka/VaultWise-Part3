@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
+//Dao
 @Dao
 interface BudgetGoalDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

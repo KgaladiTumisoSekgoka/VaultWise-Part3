@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+//Entity
 @Entity(tableName = "categories",
     foreignKeys = [ForeignKey(
         entity = User::class,
