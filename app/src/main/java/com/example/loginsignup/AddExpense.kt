@@ -58,6 +58,7 @@ class AddExpense : AppCompatActivity() {
             }
         }
 
+        //This is for the camera
         binding.imageButton20.setOnClickListener(){
             var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraProviderResult.launch(intent)
