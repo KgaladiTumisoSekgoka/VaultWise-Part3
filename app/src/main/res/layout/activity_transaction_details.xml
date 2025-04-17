@@ -17,26 +17,29 @@
         android:id="@+id/transactionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Title"
         android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/transactionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/poppins"
         android:text="Date"
-        android:textSize="18sp"
-        android:layout_marginTop="5dp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/transactionAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/poppins"
         android:text="Amount"
-        android:textSize="20sp"
         android:textColor="#FF5722"
-        android:layout_marginTop="5dp" />
+        android:textSize="20sp" />
 
 </LinearLayout>
