@@ -159,7 +159,7 @@
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:inputType="date"
-        android:text="Date"
+        android:hint ="Enter date here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
 
@@ -172,7 +172,7 @@
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:inputType="time"
-        android:text="Time"
+        android:hint="Enter time here"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button5" />

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +21,12 @@ class HomeScreen : AppCompatActivity()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_screen)
+
+        // Retrieve username from intent
+        val username = intent.getStringExtra("username")
+        val welcomeText = findViewById<TextView>(R.id.textView21)
+        welcomeText.text = "Welcome, $username"
+
         // Find button by ID
         val btnHome = findViewById<ImageButton>(R.id.imageButton3)
         btnHome.setOnClickListener {

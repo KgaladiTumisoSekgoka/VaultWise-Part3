@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
+
 }
 
 android {
@@ -64,4 +66,18 @@ dependencies {
     }
     implementation("androidx.multidex:multidex:2.0.1")
 
+    // Room dependencies(IIE,2025)
+    implementation ("androidx.room:room-runtime:2.7.0")
+    annotationProcessor ("androidx.room:room-compiler:2.7.0") // for Java projects
+    implementation ("androidx.room:room-ktx:2.7.0")    // for Kotlin support
+    kapt ("androidx.room:room-compiler:2.7.0") // For Kotlin code generation
+
+    // Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }
+
