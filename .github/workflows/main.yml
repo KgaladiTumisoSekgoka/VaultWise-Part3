@@ -1,12 +1,12 @@
 name: Room DB CI
 
 on:
-  push:
+  push:  # Runs on ANY commit to ANY branch
     branches:
-      - main  # Runs on commits to main branch
+      - '**'  
   pull_request:
     branches:
-      - main  # Runs when pull requests are opened to main
+      - '**'  # Runs on any pull request
 
 jobs:
   test:
