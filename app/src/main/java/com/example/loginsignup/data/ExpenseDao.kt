@@ -22,8 +22,11 @@ interface ExpenseDao
     @Query("SELECT * FROM expenses INNER JOIN categories ON expenses.category_id = categories.category_id")
     fun getAllExpensesWithCategory(): List<ExpenseWithCategory>
 
+    @Query("SELECT * FROM expenses WHERE expense_id = :expenseId LIMIT 1")
+    suspend fun getExpenseById(expenseId: Int): Expense?
+
     @Update
-    suspend fun updateExpense(expense: Expense)
+    fun updateExpense(expense: Expense)
 
     @Query("DELETE FROM expenses WHERE expense_id = :expenseId")
     suspend fun deleteExpenseById(expenseId: Int)

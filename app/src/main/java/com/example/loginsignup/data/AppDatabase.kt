@@ -22,9 +22,9 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java, // <- This should match the class name
+                    AppDatabase::class.java, // <- This is the class name
                     "budget_tracker_database"
-                ).fallbackToDestructiveMigration() // Optional: handles version upgrades
+                ).fallbackToDestructiveMigration() // handles version upgrades
                     .build()
                 INSTANCE = instance
                 instance

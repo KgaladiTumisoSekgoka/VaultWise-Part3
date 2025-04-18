@@ -2,6 +2,8 @@ package com.example.loginsignup
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateUtils
+import android.widget.AdapterView
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.recyclerview.widget.ItemTouchHelper
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+
 
 class Transactions : AppCompatActivity() {
 
@@ -77,7 +86,7 @@ class Transactions : AppCompatActivity() {
                 transactionAdapter = TransactionAdapter(
                     expenses,
                     onItemClick = { selectedExpense ->
-                        val intent = Intent(this@Transactions, EditTransactionActivity::class.java).apply {
+                        val intent = Intent(this@Transactions, TransactionDetailsActivity::class.java).apply {
                             putExtra("title", selectedExpense.expense.title)
                             putExtra("description", selectedExpense.expense.description)
                             putExtra("amount", selectedExpense.expense.amount)
@@ -88,9 +97,10 @@ class Transactions : AppCompatActivity() {
                         }
                         startActivity(intent)
                     },
+
                     onEditClick = { selectedExpense ->
                         val intent = Intent(this@Transactions, EditTransactionActivity::class.java).apply {
-                            putExtra("expenseId", selectedExpense.expense.expense_id)
+                            putExtra("expense_id", selectedExpense.expense.expense_id)
                         }
                         startActivity(intent)
                     },
@@ -105,12 +115,9 @@ class Transactions : AppCompatActivity() {
                             val updatedExpenses = withContext(Dispatchers.IO) {
                                 expenseDao.getExpensesByUser(userId)
                             }
-
                             transactionAdapter.updateData(updatedExpenses)
-
                         }
                     }
-
                 )
                 recyclerView.adapter = transactionAdapter
 
@@ -139,13 +146,73 @@ class Transactions : AppCompatActivity() {
                         }
                     }
                 })
-
                 itemTouchHelper.attachToRecyclerView(recyclerView)
             }
-            }
         }
+        val categorySpinner = findViewById<Spinner>(R.id.categorySpinner)
+        val dateSpinner = findViewById<Spinner>(R.id.dateSpinner)
 
+        val categoryOptions = listOf("All", "Food", "Transport", "Entertainment")
+        val dateOptions = listOf("All", "Today", "This Week", "This Month")
+
+        categorySpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categoryOptions)
+        dateSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, dateOptions)
+
+        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                filterTransactions(categorySpinner.selectedItem.toString(), dateSpinner.selectedItem.toString())
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        dateSpinner.onItemSelectedListener = categorySpinner.onItemSelectedListener
     }
+    private fun filterTransactions(category: String, dateRange: String) {
+        val userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("USER_ID", -1)
+
+        lifecycleScope.launch {
+            val allExpenses = withContext(Dispatchers.IO) {
+                expenseDao.getExpensesByUser(userId)
+            }
+
+            val filtered = allExpenses.filter { expense ->
+                val matchCategory = category == "All" || expense.category.category_name == category
+
+                val now = System.currentTimeMillis()
+                val expenseDateString = expense.expense.date
+
+                val expenseDateMillis = if (!expenseDateString.isNullOrBlank()) {
+                    try {
+                        SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).parse(expenseDateString)?.time ?: 0L
+                    } catch (e: Exception) {
+                        0L // fallback if parse still fails
+                    }
+                } else {
+                    0L
+                }
+
+                val matchDate = when (dateRange) {
+                    "Today" -> DateUtils.isToday(expenseDateMillis)
+                    "This Week" -> now - expenseDateMillis <= 7 * 24 * 60 * 60 * 1000
+                    "This Month" -> {
+                        val cal = Calendar.getInstance()
+                        val currentMonth = cal.get(Calendar.MONTH)
+                        cal.timeInMillis = expenseDateMillis
+                        cal.get(Calendar.MONTH) == currentMonth
+                    }
+                    else -> true
+                }
+
+                matchCategory && matchDate
+            }
+
+            if (::transactionAdapter.isInitialized) {
+                transactionAdapter.updateData(filtered)
+            }
+            transactionAdapter.updateData(filtered)
+        }
+    }
+}
 
 
 

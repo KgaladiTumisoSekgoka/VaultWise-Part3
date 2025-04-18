@@ -25,10 +25,11 @@
         android:id="@+id/button6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="80dp"
         android:backgroundTint="#0446FD"
         android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageButton20" />
 
@@ -36,7 +37,8 @@
         android:id="@+id/textView19"
         android:layout_width="158dp"
         android:layout_height="48dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:background="@android:drawable/editbox_background"
         android:hint="Selected File Name"
         android:padding="8dp"
@@ -85,6 +87,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="88dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints="Select a category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -150,7 +153,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextDate"
         android:layout_width="150dp"
         android:layout_height="48dp"
@@ -159,11 +162,12 @@
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:inputType="date"
-        android:hint ="Enter date here"
+        android:textSize="20dp"
+        android:hint ="Date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextTime"
         android:layout_width="150dp"
         android:layout_height="48dp"
@@ -172,8 +176,8 @@
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:inputType="time"
-        android:hint="Enter time here"
-        android:textSize="20sp"
+        android:hint="Time"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
 
@@ -203,5 +207,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+
+    <Button
+        android:id="@+id/btnShowDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="2dp"
+        android:backgroundTint="#0446FD"
+        android:text="Date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+
+    <Button
+        android:id="@+id/btnPickTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="67dp"
+        android:backgroundTint="#0446FD"
+        android:text="Time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
