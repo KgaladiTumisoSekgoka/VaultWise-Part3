@@ -107,7 +107,6 @@ class AddExpense : AppCompatActivity() {
             val selectedCategory = binding.spinner2.selectedItem?.toString() ?: "Other"
             val customCategoryText = findViewById<EditText>(R.id.editTextCustomCategory).text.toString().trim()
 
-            // Check if the date or time is blank before proceeding
             if (date.isBlank()) {
                 Toast.makeText(this, "Please pick a date", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -118,7 +117,6 @@ class AddExpense : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Get the user preferences
             val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
             val userId = prefs.getInt("USER_ID", -1)
 
@@ -127,26 +125,24 @@ class AddExpense : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // If user is logged in, you can continue and add the expense
-            val username = prefs.getString("username", "User") // Get the username
+            val username = prefs.getString("username", "User")
             val homeIntent = Intent(this, HomeScreen::class.java)
-            homeIntent.putExtra("username", username) // Pass username here
+            homeIntent.putExtra("username", username)
             startActivity(homeIntent)
 
             // Insert the expense asynchronously
             lifecycleScope.launch(Dispatchers.IO) {
                 val categoryDao = db.categoryDao()
+                val budgetDao = db.budgetGoalDao()
                 var categoryId: Int? = null
 
-                // Handling custom category logic
+                // Handle custom category logic
                 if (customCategoryText.isNotEmpty()) {
-                    // Check if the custom category exists
                     val existing = categoryDao.getCategoryIdByNameAndUserId(customCategoryText, userId)
                     categoryId = existing ?: categoryDao.insert(
                         Category(category_name = customCategoryText, user_id = userId)
                     ).toInt()
                 } else {
-                    // Use selected category from spinner
                     categoryId = categoryDao.getCategoryIdByNameAndUserId(selectedCategory, userId)
                     if (categoryId == null) {
                         categoryId = categoryDao.insert(
@@ -162,16 +158,25 @@ class AddExpense : AppCompatActivity() {
                     amount = amount,
                     date = date,
                     startTime = time,
-                    photoPath = capturedPhotoPath,  // Capture the photo path if any
-                    filePath = if (fileName.isEmpty()) null else fileName,  // File path if available
+                    photoPath = capturedPhotoPath,
+                    filePath = if (fileName.isEmpty()) null else fileName,
                     category_id = categoryId,
                     user_id = userId
                 )
 
-                // Insert the expense record into the database
+                // Insert the expense into the database
                 expenseDao.insertExpense(expense)
 
-                // After insertion, show a confirmation and navigate to Transactions screen
+                // Get current month
+                val currentMonth = getCurrentMonth() // You'll define this below 👇
+
+                // Deplete from remainingBudget
+                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
+                if (budgetGoal != null) {
+                    budgetGoal.remainingBudget -= amount
+                    budgetDao.updateGoal(budgetGoal)
+                }
+
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@AddExpense, Transactions::class.java))
@@ -249,6 +254,11 @@ class AddExpense : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
+    }
+    fun getCurrentMonth(): String {
+        val calendar = Calendar.getInstance()
+        val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+        return monthFormat.format(calendar.time)
     }
 
     // ✅ Get file name

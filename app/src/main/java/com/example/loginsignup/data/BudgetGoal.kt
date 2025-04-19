@@ -23,6 +23,7 @@ data class BudgetGoal(
     @ColumnInfo(name = "month") val month: String, // NEW
     @ColumnInfo(name = "budget_amount") val budgetAmount: Double?, // Optional field
     @ColumnInfo(name = "min_goal") val minGoal: Double,
-    @ColumnInfo(name = "max_goal") val maxGoal: Double
+    @ColumnInfo(name = "max_goal") val maxGoal: Double,
+    @ColumnInfo(name = "remaining_budget") var remainingBudget: Double // <-- new field
 )
 

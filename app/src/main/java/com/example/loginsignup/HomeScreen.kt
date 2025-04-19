@@ -11,27 +11,36 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.example.loginsignup.data.AppDatabase
+import com.example.loginsignup.data.BudgetGoalDao
+import com.example.loginsignup.data.ExpenseDao
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeScreen : AppCompatActivity() {
+    private lateinit var db: AppDatabase // Your RoomDB class
+    private lateinit var expenseDao: ExpenseDao
+    private lateinit var budgetGoalDao: BudgetGoalDao
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_screen)
 
-        // Retrieve username from SharedPreferences, fallback to null if not found
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val username = prefs.getString("username", null)
+        val userId = prefs.getInt("USER_ID", -1)
 
-        // Check if the username is null and set a default message
         val welcomeText = findViewById<TextView>(R.id.textView21)
-        if (username != null) {
-            welcomeText.text = "Welcome, $username"
-        }
+        welcomeText.text = if (username != null) "Welcome, $username" else "Welcome"
 
-        // Store username in SharedPreferences if not done already
         if (username == null && intent.hasExtra("username")) {
             val editor = prefs.edit()
             val newUsername = intent.getStringExtra("username") ?: "Guest"
@@ -39,12 +48,24 @@ class HomeScreen : AppCompatActivity() {
             editor.apply()
         }
 
-        // Get budget from shared preferences
-        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val budget = sharedPref.getFloat("user_budget", 0.0f)
-        val formattedAmount = "R%.2f".format(budget)  // Improved formatting
-        val balanceTextView: TextView = findViewById(R.id.textView25)
-        balanceTextView.text = formattedAmount
+        val balanceTextView = findViewById<TextView>(R.id.textView25)
+
+        if (userId != -1) {
+            val db = AppDatabase.getDatabase(this)  // Ensure you have this method in your DB singleton
+            val budgetDao = db.budgetGoalDao()
+            val currentMonth = getCurrentMonth()
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
+                val remaining = budgetGoal?.remainingBudget ?: 0.0
+
+                withContext(Dispatchers.Main) {
+                    balanceTextView.text = "R%.2f".format(remaining)
+                }
+            }
+        } else {
+            balanceTextView.text = "R0.00"
+        }
 
         // Set up button listeners
         findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
@@ -77,4 +98,10 @@ class HomeScreen : AppCompatActivity() {
         val budget = sharedPref.getFloat("user_budget", 0.0f)
         findViewById<TextView>(R.id.textView25).text = "R%.2f".format(budget)
     }
+    fun getCurrentMonth(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault()) // Example: "2025-04"
+        return dateFormat.format(calendar.time)
+    }
+
 }

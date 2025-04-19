@@ -29,10 +29,11 @@ interface BudgetGoalDao {
     @Query("DELETE FROM budget_goals WHERE user_id = :userId")
     suspend fun deleteGoalsByUser(userId: Int)
 
-    // Update an existing BudgetGoal
-
     @Update
     suspend fun updateGoal(goal: BudgetGoal)
+
+    @Query("SELECT * FROM budget_goals WHERE user_id = :userId AND month = :month LIMIT 1")
+    suspend fun getBudgetByUserAndMonth(userId: Int, month: String): BudgetGoal
 
     @Delete
     suspend fun deleteGoal(goal: BudgetGoal)
