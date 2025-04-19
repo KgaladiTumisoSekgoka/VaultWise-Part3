@@ -107,6 +107,7 @@ class AddExpense : AppCompatActivity() {
             val selectedCategory = binding.spinner2.selectedItem?.toString() ?: "Other"
             val customCategoryText = findViewById<EditText>(R.id.editTextCustomCategory).text.toString().trim()
 
+            // Check if the date or time is blank before proceeding
             if (date.isBlank()) {
                 Toast.makeText(this, "Please pick a date", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -117,6 +118,7 @@ class AddExpense : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Get the user preferences
             val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
             val userId = prefs.getInt("USER_ID", -1)
 
@@ -125,10 +127,18 @@ class AddExpense : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // If user is logged in, you can continue and add the expense
+            val username = prefs.getString("username", "User") // Get the username
+            val homeIntent = Intent(this, HomeScreen::class.java)
+            homeIntent.putExtra("username", username) // Pass username here
+            startActivity(homeIntent)
+
+            // Insert the expense asynchronously
             lifecycleScope.launch(Dispatchers.IO) {
                 val categoryDao = db.categoryDao()
                 var categoryId: Int? = null
 
+                // Handling custom category logic
                 if (customCategoryText.isNotEmpty()) {
                     // Check if the custom category exists
                     val existing = categoryDao.getCategoryIdByNameAndUserId(customCategoryText, userId)
@@ -145,20 +155,23 @@ class AddExpense : AppCompatActivity() {
                     }
                 }
 
+                // Create Expense object
                 val expense = Expense(
                     title = title,
                     description = description,
                     amount = amount,
                     date = date,
                     startTime = time,
-                    photoPath = capturedPhotoPath,
-                    filePath = if (fileName.isEmpty()) null else fileName,
+                    photoPath = capturedPhotoPath,  // Capture the photo path if any
+                    filePath = if (fileName.isEmpty()) null else fileName,  // File path if available
                     category_id = categoryId,
                     user_id = userId
                 )
 
+                // Insert the expense record into the database
                 expenseDao.insertExpense(expense)
 
+                // After insertion, show a confirmation and navigate to Transactions screen
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@AddExpense, Transactions::class.java))

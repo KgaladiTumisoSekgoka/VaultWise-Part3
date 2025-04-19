@@ -2,9 +2,11 @@ package com.example.loginsignup
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,41 +27,58 @@ class BudgetGoalSetup : AppCompatActivity() {
 
         val minGoalEditText = findViewById<EditText>(R.id.editTextNumberDecimal2)
         val maxGoalEditText = findViewById<EditText>(R.id.editTextNumber)
+        val budgetAmountEditText = findViewById<EditText>(R.id.editTextBudgetAmount)
+        val monthSpinner = findViewById<Spinner>(R.id.spinner_month)
 
-        // Handle Back Button click
-        btnBack.setOnClickListener {
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
-        }
+        // Set spinner values (you can customize this)
+        val months = arrayOf("January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December")
+        monthSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, months)
 
-        // Handle Submit Button click
         btnSubmit.setOnClickListener {
-            // Capture the user input for min and max goals
             val minGoalValue = minGoalEditText.text.toString().toDoubleOrNull()
             val maxGoalValue = maxGoalEditText.text.toString().toDoubleOrNull()
+            val budgetAmount = budgetAmountEditText.text.toString().toFloatOrNull()
+            val selectedMonth = monthSpinner.selectedItem.toString()
 
-            // Check if the input is valid
-            if (minGoalValue == null || maxGoalValue == null) {
-                // Show error message if input is invalid
-                Toast.makeText(this, "Please enter valid minimum and maximum goals", Toast.LENGTH_SHORT).show()
+            if (minGoalValue == null || maxGoalValue == null || budgetAmount == null) {
+                Toast.makeText(this, "Please fill in all fields correctly", Toast.LENGTH_SHORT).show()
             } else {
-                // Save the valid budget goals
-                saveBudgetGoals(minGoalValue, maxGoalValue)
-                Toast.makeText(this, "Budget goals updated successfully", Toast.LENGTH_SHORT).show()
+                val sharedPref = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putFloat("minGoal", minGoalValue.toFloat())
+                    putFloat("maxGoal", maxGoalValue.toFloat())
+                    putFloat("user_budget", budgetAmount)
+                    putString("budget_month", selectedMonth)
+                    apply()
+                }
+                Toast.makeText(this, "Budget details updated successfully", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Handle Reset Button click
+        // Clear everything on reset
         btnReset.setOnClickListener {
-            // Clear the EditText fields
-            minGoalEditText.setText("")
-            maxGoalEditText.setText("")
+            minGoalEditText.text.clear()
+            maxGoalEditText.text.clear()
+            budgetAmountEditText.text.clear()
+            monthSpinner.setSelection(0)
         }
+        val sharedPref = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        minGoalEditText.setText(sharedPref.getFloat("minGoal", 0f).toString())
+        maxGoalEditText.setText(sharedPref.getFloat("maxGoal", 0f).toString())
+        budgetAmountEditText.setText(sharedPref.getFloat("user_budget", 0f).toString())
+
+        val savedMonth = sharedPref.getString("budget_month", "January")
+        val index = months.indexOf(savedMonth)
+        if (index >= 0) {
+            monthSpinner.setSelection(index)
+        }
+
     }
 
     // Function to save the budget goals (this could be saving to shared preferences or a database)
     private fun saveBudgetGoals(minGoal: Double, maxGoal: Double) {
-        // For simplicity, let's assume you are saving these to shared preferences (you can adjust it as per your requirements)
+
         val sharedPref = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putFloat("minGoal", minGoal.toFloat())

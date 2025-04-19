@@ -15,69 +15,66 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
-class HomeScreen : AppCompatActivity()
-{
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+class HomeScreen : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_screen)
 
-        // Retrieve username from intent
-        val username = intent.getStringExtra("username")
+        // Retrieve username from SharedPreferences, fallback to null if not found
+        val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        val username = prefs.getString("username", null)
+
+        // Check if the username is null and set a default message
         val welcomeText = findViewById<TextView>(R.id.textView21)
-        welcomeText.text = "Welcome, $username"
-
-        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val budget = sharedPref.getFloat("user_budget", 0.0f) // default = 0.0 if not set
-
-        val balanceTextView: TextView = findViewById(R.id.textView25)
-        val formattedAmount = "R" + String.format("%,.2f", budget)
-        balanceTextView.text = formattedAmount
-
-        // Find button by ID
-        val btnHome = findViewById<ImageButton>(R.id.imageButton3)
-        btnHome.setOnClickListener {
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
-        }
-        val btnSetupBudget = findViewById<ImageButton>(R.id.imageButton21)
-        btnSetupBudget.setOnClickListener {
-            val intent = Intent(this, SetupBudget::class.java)
-            startActivity(intent)
+        if (username != null) {
+            welcomeText.text = "Welcome, $username"
         }
 
-        val btnBudgetGoalSetup = findViewById<ImageButton>(R.id.imageButton22)
-        btnBudgetGoalSetup.setOnClickListener {
-            val intent = Intent(this, BudgetGoalSetup::class.java)
-            startActivity(intent)
+        // Store username in SharedPreferences if not done already
+        if (username == null && intent.hasExtra("username")) {
+            val editor = prefs.edit()
+            val newUsername = intent.getStringExtra("username") ?: "Guest"
+            editor.putString("username", newUsername)
+            editor.apply()
         }
-        val btnTransact = findViewById<ImageButton>(R.id.imageButton4)
-        btnTransact.setOnClickListener {
-            val intent = Intent(this, Transactions::class.java)
-            startActivity(intent)
-        }
-        val btnFAB = findViewById<ImageButton>(R.id.imageButton5)
-        btnFAB.setOnClickListener {
-            val intent = Intent(this, AddExpense::class.java)
-            startActivity(intent)
-        }
-        val btnChart = findViewById<ImageButton>(R.id.imageButton6)
-        btnChart.setOnClickListener {
-            val intent = Intent(this, Chart::class.java)
-            startActivity(intent)
-        }
-        val btnMore = findViewById<ImageButton>(R.id.imageButton7)
-        btnMore.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-    }
-    override fun onResume() {
-        super.onResume()
+
+        // Get budget from shared preferences
         val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val budget = sharedPref.getFloat("user_budget", 0.0f)
-        findViewById<TextView>(R.id.textView25).text = "R" + String.format("%,.2f", budget)
+        val formattedAmount = "R%.2f".format(budget)  // Improved formatting
+        val balanceTextView: TextView = findViewById(R.id.textView25)
+        balanceTextView.text = formattedAmount
+
+        // Set up button listeners
+        findViewById<ImageButton>(R.id.imageButton3).setOnClickListener {
+            // Home screen action is redundant since we're already here
+        }
+        findViewById<ImageButton>(R.id.imageButton21).setOnClickListener {
+            startActivity(Intent(this, SetupBudget::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton22).setOnClickListener {
+            startActivity(Intent(this, BudgetGoalSetup::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton4).setOnClickListener {
+            startActivity(Intent(this, Transactions::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton5).setOnClickListener {
+            startActivity(Intent(this, AddExpense::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton6).setOnClickListener {
+            startActivity(Intent(this, Chart::class.java))
+        }
+        findViewById<ImageButton>(R.id.imageButton7).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh the budget on resume
+        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val budget = sharedPref.getFloat("user_budget", 0.0f)
+        findViewById<TextView>(R.id.textView25).text = "R%.2f".format(budget)
+    }
 }

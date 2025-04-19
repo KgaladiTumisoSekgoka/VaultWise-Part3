@@ -30,8 +30,6 @@ import androidx.core.content.ContextCompat
 import android.Manifest
 import androidx.core.app.ActivityCompat
 
-
-
 class Transactions : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -39,7 +37,6 @@ class Transactions : AppCompatActivity() {
     private lateinit var expenseDao: ExpenseDao
     private val REQUEST_CODE_PERMISSION = 101
     private val REQUEST_CODE_READ_STORAGE = 101
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -228,7 +225,7 @@ class Transactions : AppCompatActivity() {
             if (::transactionAdapter.isInitialized) {
                 transactionAdapter.updateData(filtered)
             }
-            transactionAdapter.updateData(filtered)
+            //transactionAdapter.updateData(filtered)
         }
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

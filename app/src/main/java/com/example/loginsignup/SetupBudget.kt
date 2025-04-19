@@ -38,7 +38,13 @@ class SetupBudget : AppCompatActivity() {
         val maxGoal = findViewById<EditText>(R.id.editTextMaxGoal)
 
         btnSave.setOnClickListener {
-            val userId = 1 // Placeholder
+            val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+            val userId = sharedPref.getInt("user_id", -1)
+
+            if (userId == -1) {
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val selectedMonth = spinner.selectedItem.toString()
             val budget = budgetAmount.text.toString().toFloatOrNull()
             val min = minGoal.text.toString().toDoubleOrNull()
