@@ -1,5 +1,6 @@
 package com.example.loginsignup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -26,6 +27,13 @@ class HomeScreen : AppCompatActivity()
         val username = intent.getStringExtra("username")
         val welcomeText = findViewById<TextView>(R.id.textView21)
         welcomeText.text = "Welcome, $username"
+
+        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val budget = sharedPref.getFloat("user_budget", 0.0f) // default = 0.0 if not set
+
+        val balanceTextView: TextView = findViewById(R.id.textView25)
+        val formattedAmount = "R" + String.format("%,.2f", budget)
+        balanceTextView.text = formattedAmount
 
         // Find button by ID
         val btnHome = findViewById<ImageButton>(R.id.imageButton3)
@@ -65,4 +73,11 @@ class HomeScreen : AppCompatActivity()
             startActivity(intent)
         }
     }
+    override fun onResume() {
+        super.onResume()
+        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val budget = sharedPref.getFloat("user_budget", 0.0f)
+        findViewById<TextView>(R.id.textView25).text = "R" + String.format("%,.2f", budget)
+    }
+
 }

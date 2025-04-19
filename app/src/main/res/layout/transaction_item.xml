@@ -24,8 +24,8 @@
             <!-- Image on the left -->
             <ImageView
                 android:id="@+id/imgExpense"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="135dp"
                 android:layout_marginEnd="12dp"
                 android:contentDescription="Expense Image"
                 android:scaleType="centerCrop"

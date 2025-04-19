@@ -97,12 +97,6 @@ class AddExpense : AppCompatActivity() {
             filePickerLauncher.launch(intent)
         }
 
-        btnAttach.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "*/*"
-            filePickerLauncher.launch(intent)
-        }
-
         binding.button6.setOnClickListener {
             val title = binding.editTextText3.text.toString()
             val description = binding.editTextText4.text.toString()
@@ -111,6 +105,7 @@ class AddExpense : AppCompatActivity() {
             val time = binding.editTextTime.text.toString()
             val fileName = binding.textView19.text.toString()
             val selectedCategory = binding.spinner2.selectedItem?.toString() ?: "Other"
+            val customCategoryText = findViewById<EditText>(R.id.editTextCustomCategory).text.toString().trim()
 
             if (date.isBlank()) {
                 Toast.makeText(this, "Please pick a date", Toast.LENGTH_SHORT).show()
@@ -121,46 +116,55 @@ class AddExpense : AppCompatActivity() {
                 Toast.makeText(this, "Please pick a time", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
             val userId = prefs.getInt("USER_ID", -1)
 
-            if (userId != -1) {
-                val db = AppDatabase.getDatabase(this)
+            if (userId == -1) {
+                Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-                // ✅ Make sure this is running inside a coroutine properly
-                lifecycleScope.launch(Dispatchers.IO) {
-                    // Get or insert category
-                    var categoryId = db.categoryDao().getCategoryIdByNameAndUserId(selectedCategory, userId)
+            lifecycleScope.launch(Dispatchers.IO) {
+                val categoryDao = db.categoryDao()
+                var categoryId: Int? = null
 
+                if (customCategoryText.isNotEmpty()) {
+                    // Check if the custom category exists
+                    val existing = categoryDao.getCategoryIdByNameAndUserId(customCategoryText, userId)
+                    categoryId = existing ?: categoryDao.insert(
+                        Category(category_name = customCategoryText, user_id = userId)
+                    ).toInt()
+                } else {
+                    // Use selected category from spinner
+                    categoryId = categoryDao.getCategoryIdByNameAndUserId(selectedCategory, userId)
                     if (categoryId == null) {
-                        val newCategory = Category(category_name = selectedCategory, user_id = userId)
-                        categoryId = db.categoryDao().insert(newCategory).toInt()
-                    }
-
-                    val expense = Expense(
-                        title = title,
-                        description = description,
-                        amount = amount,
-                        date = date,
-                        startTime = time,
-                        photoPath = capturedPhotoPath,
-                        filePath = if (fileName.isEmpty()) null else fileName,
-                        category_id = categoryId,
-                        user_id = userId
-                    )
-
-                    db.expenseDao().insertExpense(expense)
-
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@AddExpense, Transactions::class.java))
+                        categoryId = categoryDao.insert(
+                            Category(category_name = selectedCategory, user_id = userId)
+                        ).toInt()
                     }
                 }
-            } else {
-                Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
+
+                val expense = Expense(
+                    title = title,
+                    description = description,
+                    amount = amount,
+                    date = date,
+                    startTime = time,
+                    photoPath = capturedPhotoPath,
+                    filePath = if (fileName.isEmpty()) null else fileName,
+                    category_id = categoryId,
+                    user_id = userId
+                )
+
+                expenseDao.insertExpense(expense)
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@AddExpense, Transactions::class.java))
+                }
             }
         }
-
 
         val btnCustomCategory = findViewById<Button>(R.id.button5)
         btnCustomCategory.setOnClickListener {
@@ -238,5 +242,4 @@ class AddExpense : AppCompatActivity() {
     private fun getFileName(uri: Uri?): String {
         return uri?.path?.substringAfterLast("/") ?: "Unknown File"
     }
-
 }

@@ -1,8 +1,10 @@
 package com.example.loginsignup
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.widget.AdapterView
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +26,10 @@ import java.util.Locale
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.core.content.ContextCompat
+import android.Manifest
+import androidx.core.app.ActivityCompat
+
 
 
 class Transactions : AppCompatActivity() {
@@ -31,6 +37,9 @@ class Transactions : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var expenseDao: ExpenseDao
+    private val REQUEST_CODE_PERMISSION = 101
+    private val REQUEST_CODE_READ_STORAGE = 101
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +72,17 @@ class Transactions : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        // Check if permission is granted or not
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // If not, request the permission
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_READ_STORAGE
+            )
+        }
         // ---- RecyclerView Setup ----
         recyclerView = findViewById(R.id.recyclerView) // Make sure your XML uses this ID
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -89,7 +109,7 @@ class Transactions : AppCompatActivity() {
                         val intent = Intent(this@Transactions, TransactionDetailsActivity::class.java).apply {
                             putExtra("title", selectedExpense.expense.title)
                             putExtra("description", selectedExpense.expense.description)
-                            putExtra("amount", selectedExpense.expense.amount)
+                            putExtra("amount", selectedExpense.expense.amount.toString())
                             putExtra("date", selectedExpense.expense.date)
                             putExtra("startTime", selectedExpense.expense.startTime)
                             putExtra("category", selectedExpense.category.category_name)
@@ -110,7 +130,6 @@ class Transactions : AppCompatActivity() {
                                 expenseDao.deleteExpenseById(selectedExpense.expense.expense_id)
 
                             }
-
                             // Refresh the list after deletion
                             val updatedExpenses = withContext(Dispatchers.IO) {
                                 expenseDao.getExpensesByUser(userId)
@@ -152,7 +171,7 @@ class Transactions : AppCompatActivity() {
         val categorySpinner = findViewById<Spinner>(R.id.categorySpinner)
         val dateSpinner = findViewById<Spinner>(R.id.dateSpinner)
 
-        val categoryOptions = listOf("All", "Food", "Transport", "Entertainment")
+        val categoryOptions = listOf("All", "Food", "Transport", "Entertainment","Health","Bills","Shopping","Custom")
         val dateOptions = listOf("All", "Today", "This Week", "This Month")
 
         categorySpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categoryOptions)
@@ -210,6 +229,17 @@ class Transactions : AppCompatActivity() {
                 transactionAdapter.updateData(filtered)
             }
             transactionAdapter.updateData(filtered)
+        }
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_CODE_READ_STORAGE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Permission", "READ_EXTERNAL_STORAGE permission granted")
+            } else {
+                Log.d("Permission", "READ_EXTERNAL_STORAGE permission denied")
+            }
         }
     }
 }

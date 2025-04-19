@@ -8,7 +8,7 @@
     tools:context=".SetupBudget">
 
     <EditText
-        android:id="@+id/editTextNumber4"
+        android:id="@+id/editTextMaxGoal"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
@@ -16,7 +16,7 @@
         android:backgroundTint="#FCF5FD"
         android:ems="10"
         android:fontFamily="@font/poppins"
-        android:hint="enter max spending here"
+        android:hint="Maximum Budget"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView31" />
@@ -31,17 +31,17 @@
         android:text="Enter Maximum Budget Goal"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal4" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextMinGoal" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal4"
+        android:id="@+id/editTextMinGoal"
         android:layout_width="259dp"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="89dp"
         android:backgroundTint="#FCF5FD"
         android:ems="10"
-        android:hint="enter min spending here"
+        android:hint="Minimum Budget"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView30" />
@@ -84,6 +84,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_arrow_back_24" />
 
+
+    <Spinner
+        android:id="@+id/spinner_month"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:autofillHints="Select a month"
+        android:entries="@array/months_array"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextMaxGoal" />
+
     <TextView
         android:id="@+id/textView27"
         android:layout_width="wrap_content"
@@ -123,21 +135,22 @@
         android:textColor="#FCF5FD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button10" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSaveBudget" />
 
 
     <Button
-        android:id="@+id/button10"
+        android:id="@+id/btnSaveBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="156dp"
         android:backgroundTint="#0446FD"
         android:text="SUBMIT"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber4" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_month" />
 
     <ImageView
         android:id="@+id/imageView4"

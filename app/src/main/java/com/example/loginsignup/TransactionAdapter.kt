@@ -1,13 +1,19 @@
 package com.example.loginsignup
 
-import android.net.Uri
+import android.Manifest
+import android.content.pm.PackageManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.loginsignup.data.ExpenseWithCategory
+import java.io.File
 
 class TransactionAdapter(
     private var expenses: List<ExpenseWithCategory>,
@@ -17,36 +23,65 @@ class TransactionAdapter(
 ) : RecyclerView.Adapter<TransactionAdapter.ExpenseViewHolder>() {
 
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-
-        val title: TextView = itemView.findViewById(R.id.txtTitle)
-        val description: TextView = itemView.findViewById(R.id.txtDescription)
-        val amount: TextView = itemView.findViewById(R.id.txtAmount)
-        val dateTime: TextView = itemView.findViewById(R.id.txtDateTime)
-        val category: TextView = itemView.findViewById(R.id.txtCategory)
-        val btnEdit: ImageButton = itemView.findViewById(R.id.editImageButton)
-        val btnDelete: ImageButton = itemView.findViewById(R.id.deleteImageButton)
+        private val title: TextView = itemView.findViewById(R.id.txtTitle)
+        private val description: TextView = itemView.findViewById(R.id.txtDescription)
+        private val amount: TextView = itemView.findViewById(R.id.txtAmount)
+        private val dateTime: TextView = itemView.findViewById(R.id.txtDateTime)
+        private val category: TextView = itemView.findViewById(R.id.txtCategory)
+        private val btnEdit: ImageButton = itemView.findViewById(R.id.editImageButton)
+        private val btnDelete: ImageButton = itemView.findViewById(R.id.deleteImageButton)
+        private val imageView: ImageView = itemView.findViewById(R.id.imgExpense)
 
         fun bind(expense: ExpenseWithCategory) {
-            title.text = expense.expense.title // Updated to reference the correct field
-            description.text = expense.expense.description
-            amount.text = "R${expense.expense.amount}" // Updated to reference the correct field
-            dateTime.text = "${expense.expense.date} at ${expense.expense.startTime}" // Updated to reference the correct field
-            category.text = expense.category.category_name // Updated to reference the correct field
+            val context = itemView.context
+            val expenseData = expense.expense
 
-            // Set up click listeners
-            itemView.setOnClickListener {
-                onItemClick(expense)
-            }
+            title.text = expenseData.title
+            description.text = expenseData.description
+            amount.text = "R${expenseData.amount}"
+            dateTime.text = "${expenseData.date} at ${expenseData.startTime}"
+            category.text = expense.category.category_name
 
-            btnEdit.setOnClickListener {
-                onEditClick(expense)
-            }
+            // Click listeners
+            itemView.setOnClickListener { onItemClick(expense) }
+            btnEdit.setOnClickListener { onEditClick(expense) }
+            btnDelete.setOnClickListener { onDeleteClick(expense) }
 
-            btnDelete.setOnClickListener {
-                onDeleteClick(expense)
+            // Load image if permission granted
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                loadImage(expenseData.photoPath)
+            } else {
+                Log.w("TransactionAdapter", "READ_EXTERNAL_STORAGE permission not granted.")
+                imageView.setImageResource(R.drawable.error_image)
             }
         }
+
+        private fun loadImage(imagePath: String?) {
+            if (!imagePath.isNullOrBlank()) {
+                val file = File(imagePath)
+
+                // 👇 Add these logs to help debug
+                Log.d("AdapterDebug", "Checking image at path: $imagePath")
+                Log.d("AdapterDebug", "Does file exist? ${file.exists()}")
+
+                if (file.exists()) {
+                    Glide.with(itemView.context)
+                        .load(file)
+                        .placeholder(R.drawable.loading_image)
+                        .error(R.drawable.default_image)
+                        .into(imageView)
+                } else {
+                    Log.e("ImageLoadError", "File does not exist: $imagePath")
+                    imageView.setImageResource(R.drawable.default_image)
+                }
+            } else {
+                Log.d("TransactionAdapter", "PhotoPath is null or blank.")
+                imageView.setImageResource(R.drawable.default_image)
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -56,18 +91,15 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
-        val expense = expenses[position]
-        holder.bind(expense) // Reuse the bind method to update the view
+        holder.bind(expenses[position])
     }
 
     override fun getItemCount(): Int = expenses.size
+
     fun updateData(newData: List<ExpenseWithCategory>) {
         expenses = newData
         notifyDataSetChanged()
     }
 
-    fun getExpenseAt(position: Int): ExpenseWithCategory {
-        return expenses[position]
-    }
-
+    fun getExpenseAt(position: Int): ExpenseWithCategory = expenses[position]
 }
