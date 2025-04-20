@@ -87,7 +87,7 @@ class SetupBudget : AppCompatActivity() {
                 budgetAmount = budget.toDouble(),
                 minGoal = minGoal,
                 maxGoal = maxGoal,
-                remainingBudget = budget.toDouble()
+                //remainingBudget = budget.toDouble()
             )
 
             CoroutineScope(Dispatchers.IO).launch {

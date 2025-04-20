@@ -90,7 +90,7 @@ class BudgetGoalSetup : AppCompatActivity() {
                         minGoal = minGoal,
                         maxGoal = maxGoal,
                         budgetAmount = budgetAmount,
-                        remainingBudget = budgetAmount
+                        //remainingBudget = budgetAmount
                     )
                     dao.updateGoal(updatedGoal)
                 } else {
@@ -100,7 +100,7 @@ class BudgetGoalSetup : AppCompatActivity() {
                         minGoal = minGoal,
                         maxGoal = maxGoal,
                         budgetAmount = budgetAmount,
-                        remainingBudget = budgetAmount
+                        //remainingBudget = budgetAmount
                     )
                     dao.insertGoal(newGoal)
                 }

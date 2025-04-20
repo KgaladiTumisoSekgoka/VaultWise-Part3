@@ -169,12 +169,6 @@ class AddExpense : AppCompatActivity() {
                 // Get current month
                 val currentMonth = getCurrentMonth() // You'll define this below 👇
 
-                // Deplete from remainingBudget
-                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
-                if (budgetGoal != null) {
-                    budgetGoal.remainingBudget -= amount
-                    budgetDao.updateGoal(budgetGoal)
-                }
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()

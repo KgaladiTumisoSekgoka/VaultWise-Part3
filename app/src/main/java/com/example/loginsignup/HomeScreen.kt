@@ -54,21 +54,8 @@ class HomeScreen : AppCompatActivity() {
         if (userId != -1) {
             val db = AppDatabase.getDatabase(this)  // Ensure you have this method in your DB singleton
             val budgetDao = db.budgetGoalDao()
-            val currentMonth = getCurrentMonth()
-            Log.d("HomeScreen", "Current Month: $currentMonth")  // Log current month
-            CoroutineScope(Dispatchers.IO).launch {
-                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
-                Log.d("HomeScreen", "Budget retrieved: $budgetGoal")  // Log the budget goal retrieved from the database
-
-                val remaining = budgetGoal?.remainingBudget ?: 0.0
-
-                withContext(Dispatchers.Main) {
-                    Log.d("HomeScreen", "Remaining budget: $remaining")
-                    balanceTextView.text = "R%.2f".format(remaining)
-                }
-            }
-        } else {
-            balanceTextView.text = "R0.00"
+            //val currentMonth = getCurrentMonth()
+            //Log.d("HomeScreen", "Current Month: $currentMonth")  // Log current month
         }
 
         // Set up button listeners
@@ -95,7 +82,7 @@ class HomeScreen : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val userId = prefs.getInt("USER_ID", -1)
@@ -109,13 +96,6 @@ class HomeScreen : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
                 Log.d("HomeScreen", "Budget retrieved in onResume: $budgetGoal")  // Log budget retrieved in onResume
-
-                val remaining = budgetGoal?.remainingBudget ?: 0.0
-
-                withContext(Dispatchers.Main) {
-                    Log.d("HomeScreen", "Remaining budget in onResume: $remaining")  // Log remaining budget in onResume
-                    balanceTextView.text = "R%.2f".format(remaining)
-                }
             }
         }
     }
@@ -124,6 +104,6 @@ class HomeScreen : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault()) // Gives "April"
         return dateFormat.format(calendar.time)
-    }
+    }*/
 
 }
