@@ -132,7 +132,6 @@ class AddExpense : AppCompatActivity() {
             // Insert the expense asynchronously
             lifecycleScope.launch(Dispatchers.IO) {
                 val categoryDao = db.categoryDao()
-                val budgetDao = db.budgetGoalDao()
                 var categoryId: Int? = null
 
                 // Handle custom category logic
@@ -162,13 +161,8 @@ class AddExpense : AppCompatActivity() {
                     category_id = categoryId,
                     user_id = userId
                 )
-
                 // Insert the expense into the database
                 expenseDao.insertExpense(expense)
-
-                // Get current month
-                val currentMonth = getCurrentMonth() // You'll define this below 👇
-
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()

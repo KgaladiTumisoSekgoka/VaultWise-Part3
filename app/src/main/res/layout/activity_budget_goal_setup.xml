@@ -33,56 +33,56 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_arrow_back_24" />
 
+    <EditText
+        android:id="@+id/editTextNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="96dp"
+        android:backgroundTint="#FCF5FD"
+        android:ems="10"
+        android:fontFamily="@font/poppins"
+        android:hint="update maximum spending here"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
     <TextView
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="64dp"
         android:fontFamily="@font/poppins"
         android:text="Update Minimum Budget Goal"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
+    <EditText
+        android:id="@+id/editTextNumberDecimal2"
+        android:layout_width="259dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="108dp"
+        android:backgroundTint="#FCF5FD"
+        android:ems="10"
+        android:hint="update minimum spending here"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
     <TextView
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="60dp"
         android:fontFamily="@font/poppins"
         android:text="Update Maximum Budget Goal"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal2" />
-
-    <EditText
-        android:id="@+id/editTextNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="92dp"
-        android:backgroundTint="#FCF5FD"
-        android:ems="10"
-        android:fontFamily="@font/poppins"
-        android:inputType="number"
-        android:hint="update maximum spending here"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView23" />
-
-    <EditText
-        android:id="@+id/editTextBudgetAmount"
-        android:layout_width="259dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#FCF5FD"
-        android:hint="Update monthly budget amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.394"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <Button
         android:id="@+id/button8"
@@ -125,18 +125,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView14"
         app:srcCompat="@drawable/budget" />
 
-    <EditText
-        android:id="@+id/editTextNumberDecimal2"
-        android:layout_width="259dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="92dp"
-        android:backgroundTint="#FCF5FD"
-        android:hint="update minimum spending here"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
     <!-- Spinner for Month -->
 
     <!-- EditText for Budget Amount -->
@@ -145,11 +133,11 @@
         android:id="@+id/spinner_month"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextBudgetAmount" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/budgetProgressSection"
