@@ -1,5 +1,4 @@
 package com.example.loginsignup.data
-
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,8 +10,9 @@ import androidx.room.Update
 @Dao
 interface BudgetGoalDao {
 
+    @Query("SELECT * FROM budget_goals LIMIT 1")
+    suspend fun getBudgetGoal(): BudgetGoal?
     // Insert a new BudgetGoal
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGoal(goal: BudgetGoal)
 
@@ -31,6 +31,7 @@ interface BudgetGoalDao {
 
     @Update
     suspend fun updateGoal(goal: BudgetGoal)
+
 
     @Query("SELECT * FROM budget_goals WHERE user_id = :userId AND month = :month LIMIT 1")
     suspend fun getBudgetByUserAndMonth(userId: Int, month: String): BudgetGoal

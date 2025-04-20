@@ -3,6 +3,7 @@ package com.example.loginsignup
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -37,7 +38,7 @@ class HomeScreen : AppCompatActivity() {
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val username = prefs.getString("username", null)
         val userId = prefs.getInt("USER_ID", -1)
-
+        Log.d("HomeScreen", "User ID: $userId")  // Log user ID
         val welcomeText = findViewById<TextView>(R.id.textView21)
         welcomeText.text = if (username != null) "Welcome, $username" else "Welcome"
 
@@ -54,12 +55,15 @@ class HomeScreen : AppCompatActivity() {
             val db = AppDatabase.getDatabase(this)  // Ensure you have this method in your DB singleton
             val budgetDao = db.budgetGoalDao()
             val currentMonth = getCurrentMonth()
-
+            Log.d("HomeScreen", "Current Month: $currentMonth")  // Log current month
             CoroutineScope(Dispatchers.IO).launch {
                 val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
+                Log.d("HomeScreen", "Budget retrieved: $budgetGoal")  // Log the budget goal retrieved from the database
+
                 val remaining = budgetGoal?.remainingBudget ?: 0.0
 
                 withContext(Dispatchers.Main) {
+                    Log.d("HomeScreen", "Remaining budget: $remaining")
                     balanceTextView.text = "R%.2f".format(remaining)
                 }
             }
@@ -93,14 +97,32 @@ class HomeScreen : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh the budget on resume
-        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val budget = sharedPref.getFloat("user_budget", 0.0f)
-        findViewById<TextView>(R.id.textView25).text = "R%.2f".format(budget)
+        val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        val userId = prefs.getInt("USER_ID", -1)
+        Log.d("HomeScreen", "onResume User ID: $userId")  // Log user ID in onResume
+        if (userId != -1) {
+            val db = AppDatabase.getDatabase(this)
+            val budgetDao = db.budgetGoalDao()
+            val balanceTextView = findViewById<TextView>(R.id.textView25)
+            val currentMonth = getCurrentMonth()
+            Log.d("HomeScreen", "Current Month: $currentMonth")  // Log current month again
+            CoroutineScope(Dispatchers.IO).launch {
+                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
+                Log.d("HomeScreen", "Budget retrieved in onResume: $budgetGoal")  // Log budget retrieved in onResume
+
+                val remaining = budgetGoal?.remainingBudget ?: 0.0
+
+                withContext(Dispatchers.Main) {
+                    Log.d("HomeScreen", "Remaining budget in onResume: $remaining")  // Log remaining budget in onResume
+                    balanceTextView.text = "R%.2f".format(remaining)
+                }
+            }
+        }
     }
+
     fun getCurrentMonth(): String {
         val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault()) // Example: "2025-04"
+        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault()) // Gives "April"
         return dateFormat.format(calendar.time)
     }
 

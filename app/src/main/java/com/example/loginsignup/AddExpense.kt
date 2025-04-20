@@ -44,7 +44,6 @@ class AddExpense : AppCompatActivity() {
     lateinit var btnShowDatePicker: Button
     private val calendar = Calendar.getInstance()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
