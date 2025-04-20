@@ -71,6 +71,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
+    <EditText
+        android:id="@+id/editTextBudgetAmount"
+        android:layout_width="259dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#FCF5FD"
+        android:hint="Update monthly budget amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.394"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
     <Button
         android:id="@+id/button8"
         android:layout_width="wrap_content"
@@ -91,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="128dp"
         android:layout_marginEnd="156dp"
         android:backgroundTint="#0446FD"
         android:text="SUBMIT"
@@ -138,16 +151,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextBudgetAmount" />
 
-    <EditText
-        android:id="@+id/editTextBudgetAmount"
-        android:layout_width="259dp"
-        android:layout_height="48dp"
+    <LinearLayout
+        android:id="@+id/budgetProgressSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#FCF5FD"
-        android:hint="Update monthly budget amount"
-        android:inputType="numberDecimal"
+        android:orientation="vertical"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.394"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumber">
+
+        <TextView
+            android:id="@+id/budgetProgressLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Budget Progress"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/budgetProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/custom_progress_drawable" />
+
+        <TextView
+            android:id="@+id/budgetProgressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:text="Loading budget progress..." />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
