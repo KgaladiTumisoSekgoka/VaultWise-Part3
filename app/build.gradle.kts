@@ -65,6 +65,7 @@ dependencies {
         exclude(group = "com.android.support")  // Exclude old support libraries
     }
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.android.material:material:1.11.0")
 
     // Room dependencies(IIE,2025)
     implementation ("androidx.room:room-runtime:2.7.0")

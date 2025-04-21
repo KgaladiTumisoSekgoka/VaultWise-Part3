@@ -31,6 +31,19 @@ interface ExpenseDao
     @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId AND strftime('%m', date) = :month")
     fun getTotalSpentForMonth(userId: Int, month: String): Double?
 
+    @Query("""
+    SELECT categories.category_name, SUM(expenses.amount) as total 
+    FROM expenses 
+    INNER JOIN categories ON expenses.category_id = categories.category_id 
+    WHERE expenses.user_id = :userId 
+    GROUP BY categories.category_id
+""")
+    suspend fun getTotalExpensesByCategory(userId: Int): List<CategoryExpenseTotal>
+    data class CategoryExpenseTotal(
+        val category_name: String,
+        val total: Double
+    )
+
     @Update
     fun updateExpense(expense: Expense)
 
