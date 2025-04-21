@@ -1,11 +1,13 @@
 package com.example.loginsignup
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.BudgetGoal
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +41,7 @@ class BudgetGoalSetup : AppCompatActivity() {
         val btnReset = findViewById<Button>(R.id.button8)
         val btnBack = findViewById<ImageButton>(R.id.imageButton18)
         progressBar = findViewById(R.id.budgetProgressBar)
+        progressBar.progressTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue))
         progressText = findViewById(R.id.budgetProgressText)
 
         minGoalEditText = findViewById(R.id.editTextNumberDecimal2)
@@ -119,14 +122,19 @@ class BudgetGoalSetup : AppCompatActivity() {
 
     private fun loadBudgetData(month: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val dao = db.budgetGoalDao()
-            val goal = dao.getBudgetByUserAndMonth(userId, month)
+            val goalDao = db.budgetGoalDao()
+            val expenseDao = db.expenseDao()
+            val goal = goalDao.getBudgetByUserAndMonth(userId, month)
+            val datePrefix = month  // month is already like "2025/04"
+            val totalExpenses = expenseDao.getTotalExpensesForMonth(userId, datePrefix) ?: 0.0
+
 
             runOnUiThread {
                 if (goal != null) {
                     minGoalEditText.setText(goal.minGoal.toString())
                     maxGoalEditText.setText(goal.maxGoal.toString())
 
+                    updateProgressBar(goal.minGoal, goal.maxGoal, totalExpenses)
                 } else {
                     minGoalEditText.setText("")
                     maxGoalEditText.setText("")
@@ -147,4 +155,5 @@ class BudgetGoalSetup : AppCompatActivity() {
             progressText.text = "Invalid goal range"
         }
     }
+
 }

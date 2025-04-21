@@ -171,11 +171,11 @@ class AddExpense : AppCompatActivity() {
             }
         }
 
-        val btnCustomCategory = findViewById<Button>(R.id.button5)
+        /*val btnCustomCategory = findViewById<Button>(R.id.button5)
         btnCustomCategory.setOnClickListener {
             val intent = Intent(this, SelectCategory::class.java)
             startActivity(intent)
-        }
+        }*/
 
         val btnHome = findViewById<ImageButton>(R.id.imageButton19)
         btnHome.setOnClickListener {

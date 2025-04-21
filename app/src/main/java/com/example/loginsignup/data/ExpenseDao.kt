@@ -28,8 +28,8 @@ interface ExpenseDao
     @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId")
     suspend fun getTotalSpentByUser(userId: Int): Double?
 
-    @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId AND strftime('%m', date) = :month")
-    fun getTotalSpentForMonth(userId: Int, month: String): Double?
+    @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId AND date LIKE :datePrefix || '%'")
+    fun getTotalExpensesForMonth(userId: Int, datePrefix: String): Double?
 
     @Query("""
     SELECT categories.category_name, SUM(expenses.amount) as total 
