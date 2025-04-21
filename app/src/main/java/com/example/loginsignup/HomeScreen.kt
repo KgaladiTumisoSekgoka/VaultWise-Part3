@@ -35,9 +35,21 @@ class HomeScreen : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_screen)
 
+        db = AppDatabase.getDatabase(applicationContext)
+
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val username = prefs.getString("username", null)
         val userId = prefs.getInt("USER_ID", -1)
+        expenseDao = db.expenseDao()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val totalSpent = expenseDao.getTotalSpentByUser(userId) ?: 0.0
+
+            withContext(Dispatchers.Main) {
+                findViewById<TextView>(R.id.spentAmountTextView).text = "R%.2f".format(totalSpent)
+            }
+        }
+
         Log.d("HomeScreen", "User ID: $userId")  // Log user ID
         val welcomeText = findViewById<TextView>(R.id.textView21)
         welcomeText.text = if (username != null) "Welcome, $username" else "Welcome"
@@ -49,7 +61,7 @@ class HomeScreen : AppCompatActivity() {
             editor.apply()
         }
 
-        val balanceTextView = findViewById<TextView>(R.id.textView25)
+        val balanceTextView = findViewById<TextView>(R.id.spentAmountTextView)
 
         if (userId != -1) {
             val db = AppDatabase.getDatabase(this)  // Ensure you have this method in your DB singleton
@@ -82,28 +94,19 @@ class HomeScreen : AppCompatActivity() {
         }
     }
 
-    /*override fun onResume() {
+    override fun onResume() {
         super.onResume()
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val userId = prefs.getInt("USER_ID", -1)
-        Log.d("HomeScreen", "onResume User ID: $userId")  // Log user ID in onResume
+
         if (userId != -1) {
-            val db = AppDatabase.getDatabase(this)
-            val budgetDao = db.budgetGoalDao()
-            val balanceTextView = findViewById<TextView>(R.id.textView25)
-            val currentMonth = getCurrentMonth()
-            Log.d("HomeScreen", "Current Month: $currentMonth")  // Log current month again
             CoroutineScope(Dispatchers.IO).launch {
-                val budgetGoal = budgetDao.getBudgetByUserAndMonth(userId, currentMonth)
-                Log.d("HomeScreen", "Budget retrieved in onResume: $budgetGoal")  // Log budget retrieved in onResume
+                val totalSpent = expenseDao.getTotalSpentByUser(userId) ?: 0.0
+
+                withContext(Dispatchers.Main) {
+                    findViewById<TextView>(R.id.spentAmountTextView).text = "R%.2f".format(totalSpent)
+                }
             }
         }
     }
-
-    fun getCurrentMonth(): String {
-        val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault()) // Gives "April"
-        return dateFormat.format(calendar.time)
-    }*/
-
 }

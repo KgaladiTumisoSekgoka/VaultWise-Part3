@@ -25,6 +25,12 @@ interface ExpenseDao
     @Query("SELECT * FROM expenses WHERE expense_id = :expenseId LIMIT 1")
     suspend fun getExpenseById(expenseId: Int): Expense?
 
+    @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId")
+    suspend fun getTotalSpentByUser(userId: Int): Double?
+
+    @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId AND strftime('%m', date) = :month")
+    fun getTotalSpentForMonth(userId: Int, month: String): Double?
+
     @Update
     fun updateExpense(expense: Expense)
 
