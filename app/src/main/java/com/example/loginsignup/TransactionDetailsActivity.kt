@@ -56,5 +56,13 @@ class TransactionDetailsActivity : AppCompatActivity() {
         back.setOnClickListener {
             startActivity(Intent(this, Transactions::class.java))
         }
+        photoImageView.setOnClickListener {
+            if (!photoPath.isNullOrEmpty()) {
+                val intent = Intent(this, FullscreenImageActivity::class.java)
+                intent.putExtra("imagePath", photoPath)
+                startActivity(intent)
+            }
+        }
+
     }
 }
