@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.core.content.ContextCompat
 import android.Manifest
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 
 class Transactions : AppCompatActivity() {
@@ -37,11 +38,15 @@ class Transactions : AppCompatActivity() {
     private lateinit var expenseDao: ExpenseDao
     private val REQUEST_CODE_PERMISSION = 101
     private val REQUEST_CODE_READ_STORAGE = 101
+    private lateinit var totalTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_transactions)
+
+        totalTextView = findViewById(R.id.totalTextView)
 
         // ---- Navigation Buttons Setup ----
         val btnHome = findViewById<ImageButton>(R.id.imageButton13)
@@ -225,7 +230,9 @@ class Transactions : AppCompatActivity() {
             if (::transactionAdapter.isInitialized) {
                 transactionAdapter.updateData(filtered)
             }
-            //transactionAdapter.updateData(filtered)
+             // ✅ Calculate and update the total
+            val totalAmount = filtered.sumOf { it.expense.amount }
+            totalTextView.text = "Total: R${"%.2f".format(totalAmount)}"
         }
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

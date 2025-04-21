@@ -122,5 +122,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/baseline_add_circle_24" />
 
+    <TextView
+        android:id="@+id/totalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="24dp"
+        android:padding="8dp"
+        android:text="Total: R0.00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton13"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton17" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
