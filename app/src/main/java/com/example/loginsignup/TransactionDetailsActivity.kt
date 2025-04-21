@@ -1,5 +1,6 @@
 package com.example.loginsignup
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,6 +32,7 @@ class TransactionDetailsActivity : AppCompatActivity() {
         val categoryTextView = findViewById<TextView>(R.id.transactionCategory)
         val iconImageView = findViewById<ImageView>(R.id.transactionIcon)
         val photoImageView = findViewById<ImageView>(R.id.transactionPhotoImageView)
+        val back = findViewById<ImageView>(R.id.imageButton27)
 
         // Set Data
         titleTextView.text = title
@@ -50,6 +52,9 @@ class TransactionDetailsActivity : AppCompatActivity() {
                 .into(photoImageView)
         } else {
             photoImageView.setImageResource(R.drawable.placeholder_image)
+        }
+        back.setOnClickListener {
+            startActivity(Intent(this, Transactions::class.java))
         }
     }
 }

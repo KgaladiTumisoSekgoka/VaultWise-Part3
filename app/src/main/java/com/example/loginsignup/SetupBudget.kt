@@ -102,6 +102,17 @@ class SetupBudget : AppCompatActivity() {
                 }
             }
         }
+        val btnReset = findViewById<Button>(R.id.button11)
+
+        btnReset.setOnClickListener {
+            // Clear the EditText fields
+            minGoalEditText.text.clear()
+            maxGoalEditText.text.clear()
+
+            // Reset the spinner to the first item
+            spinner.setSelection(0)
+        }
+
     }
 
     private fun showToast(message: String) {
