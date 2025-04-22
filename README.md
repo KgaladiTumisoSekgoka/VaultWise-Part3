@@ -1,20 +1,54 @@
-# Vaultwise Android App
+# 💰 Vaultwise Budget Tracker App
 
-Vaultwise is a secure personal finance management app that allows users to track income, expenses, and budget goals. The app uses Firebase Authentication for secure login and Room Database for local data storage. It also includes features like budget tracking, data visualization (charts), and spending alerts.
+Welcome to **Vaultwise**, your smart and secure way to manage your budget and track your expenses.  
+Vaultwise is built with **functionality**, **data persistence**, and a **user-friendly interface** to help you take full control of your financial journey.
 
-## Features
-- User Authentication via Firebase
-- Local data storage using Room Database
-- Budget tracking with spending alerts
-- Data visualization with charts and progress bars
+---
 
-## Prerequisites
-- **Android Studio**: Ensure you have Android Studio installed. If you don't have it, download and install it from the official site: [Android Studio](https://developer.android.com/studio).
-- **Java**: Make sure you have the correct version of Java (JDK 11 or higher) installed on your machine.
+## 📽️ Demo Video
 
-## Steps to Run the Application
+- [YouTube](https://youtu.be/KxKAjwp79xQ)  
+- [Google Drive](https://drive.google.com/drive/folders/1fnK6hCdYosS9jndpb5l1-c8bdm67W0de)
 
-### 1. Clone the Repository
-First, clone the repository to your local machine using the following command:
+## 🗂️ GitHub Repository
+
+- [TeamCollaboration-Vaultwise](https://github.com/KgaladiTumisoSekgoka/TeamCollaboration-Vaultwise)
+
+---
+
+## 🧭 Overview
+
+Vaultwise allows users to securely manage their finances with features such as:
+
+- 🔐 Log in with a unique username and password  
+- 🏷️ Create custom categories for budgeting and tracking  
+- 📝 Add expense entries including:
+  - Date  
+  - Start & end time  
+  - Description  
+  - Category  
+  - Optional photograph  
+- 🎯 Set monthly **minimum and maximum** spending goals  
+- 📅 Filter expense entries by date range  
+- 🖼️ View attached expense photos  
+- 📊 View total spending **per category**
+
+---
+
+## ⚙️ Prerequisites
+
+To run Vaultwise locally, ensure the following are installed:
+
+1. Android Studio (latest stable version)  
+2. Java Development Kit (JDK 8+)  
+3. Gradle  
+4. Android SDK  
+5. Emulator or Android device  
+
+---
+
+## 🚀 Installation Guide
+
 ```bash
+# Clone the repository
 git clone https://github.com/KgaladiTumisoSekgoka/TeamCollaboration-Vaultwise.git
