@@ -17,4 +17,4 @@ Vaultwise is a secure personal finance management app that allows users to track
 ### 1. Clone the Repository
 First, clone the repository to your local machine using the following command:
 ```bash
-git clone https://github.com/KgaladiTumisoSekgoka/vaultwise-android-app.git
+git clone https://github.com/KgaladiTumisoSekgoka/TeamCollaboration-Vaultwise.git
