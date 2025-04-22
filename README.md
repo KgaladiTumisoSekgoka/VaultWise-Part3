@@ -65,21 +65,18 @@ To run the Vaultwise application locally, you need to have the following softwar
 ## Folder Structure
 
 The Vaultwise project is organized as follows:
-• Vaultwise/ – Root directory of the project
-o app/ – Contains the core application module
-▪ src/ – Source directory for app files
-▪ main/ – Main source set
-▪ java/com/vaultwise/ – This folder contains all the Java (or Kotlin)
-source code for the application, including activities, view models,
-and business logic.
-▪ res/ – This folder contains all the XML resources such as layouts,
-drawables, strings, styles, and more.
-▪ AndroidManifest.xml – The manifest file that defines app
+- Vaultwise/ – Root directory of the project
+  - app/ – Contains the core application module
+  - src/ – Source directory for app files
+    - main/ – Main source set
+    - java/com/vaultwise/ – This folder contains all the Java (or Kotlin) source code for the application, including activities, view models, and business logic.
+    - res/ – This folder contains all the XML resources such as layouts, drawables, strings, styles, and more.
+- AndroidManifest.xml – The manifest file that defines app
 permissions, components, and configuration.
-▪ build.gradle – The Gradle build script specific to the app module.
-o build.gradle – The top-level Gradle build script that defines global build configurations
+- build.gradle – The Gradle build script specific to the app module.
+- build.gradle – The top-level Gradle build script that defines global build configurations
 and dependencies.
-o settings.gradle – The Gradle settings file used to define the modules that are included in
+- settings.gradle – The Gradle settings file used to define the modules that are included in
 the project.
 
 ---
