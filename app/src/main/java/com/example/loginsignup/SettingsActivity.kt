@@ -3,8 +3,10 @@ package com.example.loginsignup
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.commit
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -28,6 +30,22 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+            val darkModePref = findPreference<SwitchPreferenceCompat>("dark_mode")
+            darkModePref?.setOnPreferenceChangeListener { _, newValue ->
+                val isDarkMode = newValue as Boolean
+                val mode = if (isDarkMode) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                AppCompatDelegate.setDefaultNightMode(mode)
+
+                // Optional: recreate activity to reflect theme change immediately
+                requireActivity().recreate()
+                true
+            }
         }
     }
+
 }

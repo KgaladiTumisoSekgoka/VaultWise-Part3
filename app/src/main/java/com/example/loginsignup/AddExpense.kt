@@ -171,12 +171,6 @@ class AddExpense : AppCompatActivity() {
             }
         }
 
-        /*val btnCustomCategory = findViewById<Button>(R.id.button5)
-        btnCustomCategory.setOnClickListener {
-            val intent = Intent(this, SelectCategory::class.java)
-            startActivity(intent)
-        }*/
-
         val btnHome = findViewById<ImageButton>(R.id.imageButton19)
         btnHome.setOnClickListener {
             val intent = Intent(this, HomeScreen::class.java)
@@ -250,6 +244,15 @@ class AddExpense : AppCompatActivity() {
 
     // ✅ Get file name
     private fun getFileName(uri: Uri?): String {
-        return uri?.path?.substringAfterLast("/") ?: "Unknown File"
+        if (uri == null) return "Unknown File"
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)
+            if (it.moveToFirst()) {
+                return it.getString(nameIndex)
+            }
+        }
+        return uri.lastPathSegment ?: "Unknown File"
     }
+
 }

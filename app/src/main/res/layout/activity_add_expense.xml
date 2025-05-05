@@ -34,6 +34,7 @@
         android:contentDescription="Go back"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        app:tint="?attr/colorOnBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_arrow_back_24" />

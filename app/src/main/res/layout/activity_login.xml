@@ -9,55 +9,62 @@
     android:rotationX="0"
     android:rotationY="0"
     tools:context=".Login">
-    
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="216dp"
         android:layout_height="266dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="96dp"
         android:src="@drawable/blue_and_white_flat_illustrative_banking_finance_logo_removebg_preview"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="145dp"
         android:layout_height="23dp"
-        android:layout_marginTop="472dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="228dp"
         android:text="Enter Password"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="145dp"
         android:layout_height="23dp"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="364dp"
         android:layout_marginEnd="228dp"
         android:text="Enter Username"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="237dp"
         android:layout_height="24dp"
+        android:layout_marginStart="78dp"
         android:layout_marginTop="292dp"
         android:layout_marginEnd="96dp"
         android:text="Login with your account"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="136dp"
         android:backgroundTint="@color/white"
         android:ems="10"
@@ -65,20 +72,23 @@
         android:inputType="textPassword"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/editTextText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="136dp"
         android:backgroundTint="#FCF5FD"
         android:ems="10"
-        android:inputType="text"
         android:hint="Name"
+        android:inputType="text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
@@ -90,6 +100,7 @@
         android:layout_marginEnd="172dp"
         android:backgroundTint="#3F51B5"
         android:text="Login"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
@@ -104,6 +115,7 @@
         android:contentDescription="Go back"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        app:tint="?attr/colorOnBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_arrow_back_24" />
