@@ -17,6 +17,8 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE username = :username")
     suspend fun getUserByUsername(username: String): User?
 
+    @Query("Select * from users where user_id = :userId")
+    fun getUserById(userId: Int): User?
 
     // Validate login by checking both username and password
     @Query("SELECT * FROM users WHERE username = :username AND password = :password")

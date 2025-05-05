@@ -1,10 +1,12 @@
 package com.example.loginsignup
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.commit
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 
@@ -14,7 +16,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
 
-        // Load settings into the FrameLayout
+        // Load settings fragment
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.settings_container, SettingsFragment())
@@ -27,10 +29,21 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // Inner class for preference settings
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
+            // Profile preference click
+            val profilePref = findPreference<Preference>("profile")
+            profilePref?.isEnabled = true
+            profilePref?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), Profile::class.java)
+                startActivity(intent)
+                true
+            }
+
+            // Dark mode toggle
             val darkModePref = findPreference<SwitchPreferenceCompat>("dark_mode")
             darkModePref?.setOnPreferenceChangeListener { _, newValue ->
                 val isDarkMode = newValue as Boolean
@@ -40,12 +53,9 @@ class SettingsActivity : AppCompatActivity() {
                     AppCompatDelegate.MODE_NIGHT_NO
                 }
                 AppCompatDelegate.setDefaultNightMode(mode)
-
-                // Optional: recreate activity to reflect theme change immediately
                 requireActivity().recreate()
                 true
             }
         }
     }
-
 }
