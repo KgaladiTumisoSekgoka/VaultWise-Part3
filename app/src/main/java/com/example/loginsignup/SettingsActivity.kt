@@ -1,6 +1,7 @@
 package com.example.loginsignup
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.fragment.app.commit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import java.util.Locale
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -30,7 +32,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // Inner class for preference settings
-    class SettingsFragment : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
@@ -56,6 +58,36 @@ class SettingsActivity : AppCompatActivity() {
                 requireActivity().recreate()
                 true
             }
+        }
+        override fun onResume() {
+            super.onResume()
+            preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+        }
+
+        override fun onPause() {
+            super.onPause()
+            preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+        }
+
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+            if (key == "language") {
+                val languageCode = sharedPreferences?.getString("language", "en") ?: "en"
+                setLocale(languageCode)
+                activity?.recreate()
+            }
+        }
+        
+        private fun setLocale(languageCode: String) {
+            val locale = Locale(languageCode)
+            Locale.setDefault(locale)
+
+            val config = resources.configuration
+            config.setLocale(locale)
+
+            requireContext().resources.updateConfiguration(
+                config,
+                requireContext().resources.displayMetrics
+            )
         }
     }
 }

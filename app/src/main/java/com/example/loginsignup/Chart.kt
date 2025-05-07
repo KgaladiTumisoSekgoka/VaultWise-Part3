@@ -12,6 +12,7 @@ import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.example.loginsignup.data.AppDatabase
+import com.example.loginsignup.data.BudgetGoalDao
 import com.example.loginsignup.data.ExpenseDao
 
 import kotlinx.coroutines.launch
@@ -21,9 +22,8 @@ import java.util.ArrayList
 class Chart : AppCompatActivity() {
 
     private lateinit var anyChartView: AnyChartView
-    private val categories = arrayOf("Food", "Transport", "Entertainment", "Utilities", "Other")
-    private val expenses = intArrayOf(2500, 1800, 1200, 800, 700)
     private lateinit var db: AppDatabase // Your RoomDB class
+    private lateinit var budgetDao: BudgetGoalDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +31,7 @@ class Chart : AppCompatActivity() {
         setContentView(R.layout.activity_chart)
 
         db = AppDatabase.getDatabase(this)
+        budgetDao = db.budgetGoalDao()
 
         // ✅ Retrieve userId like you do in HomeScreen
         val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
@@ -40,65 +41,64 @@ class Chart : AppCompatActivity() {
         val expenseDao = db.expenseDao()
 
         lifecycleScope.launch {
+            // Fetch budget goals for the user
+            val budgetGoal = budgetDao.getCurrentGoalByUserId(userId)  // Fetch the goal for the user
+            val minGoal = budgetGoal?.minGoal ?: 0.0  // Use 0.0 if no goal found
+            val maxGoal = budgetGoal?.maxGoal ?: 0.0
+
+            // Fetch expenses by category
             val expensesByCategory = expenseDao.getTotalExpensesByCategory(userId)
             if (expensesByCategory.isEmpty()) {
                 Log.d("ChartActivity", "No expenses found for the user.")
             } else {
-                setupChartView(expensesByCategory)
+                setupBarChart(expensesByCategory, minGoal, maxGoal)
             }
         }
 
         anyChartView = findViewById(R.id.anyChartView)
-        //setupChartView()
-
-        val btnHome = findViewById<ImageButton>(R.id.imageButton9)
-        btnHome.setOnClickListener {
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
-        }
-
-        val btnTransact = findViewById<ImageButton>(R.id.imageButton10)
-        btnTransact.setOnClickListener {
-            val intent = Intent(this, Transactions::class.java)
-            startActivity(intent)
-        }
-
-        val btnFAB = findViewById<ImageButton>(R.id.imageButton8)
-        btnFAB.setOnClickListener {
-            val intent = Intent(this, AddExpense::class.java)
-            startActivity(intent)
-        }
-
-        val btnChart = findViewById<ImageButton>(R.id.imageButton11)
-        btnChart.setOnClickListener {
-            val intent = Intent(this, Chart::class.java)
-            startActivity(intent)
-        }
-
-        val btnMore = findViewById<ImageButton>(R.id.imageButton12)
-        btnMore.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-
-        }
     }
-    private fun setupChartView(data: List<ExpenseDao.CategoryExpenseTotal>) {
-        val pie = AnyChart.pie()
+
+    private fun setupBarChart(data: List<ExpenseDao.CategoryExpenseTotal>, minGoal: Double, maxGoal: Double) {
+        // Create a Cartesian chart (which allows both bar and line chart features)
+        val cartesian = AnyChart.cartesian()
+
+        // Create the bar chart for categories
         val dataEntries = data.map {
             ValueDataEntry(it.category_name, it.total)
         }
 
-        pie.data(dataEntries)
-        pie.title("Expenses by Category")
-        pie.labels().position("outside")
-        pie.legend().title().enabled(true)
-        pie.legend().title().text("Categories")
-        pie.legend().position("center-bottom")
-        pie.legend().itemsLayout("horizontal")
-        pie.legend().align("center")
-        pie.palette(arrayOf("#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"))
+        val barSeries = cartesian.column(dataEntries)
+        barSeries.name("Amount Spent")
 
-        anyChartView.setChart(pie)
+        // Add the min and max goal lines (as line charts)
+        val minGoalLineData = listOf(
+            ValueDataEntry("Min Goal", minGoal),
+            ValueDataEntry("Min Goal", minGoal)
+        )
+        val minGoalLine = cartesian.line(minGoalLineData)
+        minGoalLine.name("Min Goal").color("#FF0000")  // Red line for Min Goal
+
+        val maxGoalLineData = listOf(
+            ValueDataEntry("Max Goal", maxGoal),
+            ValueDataEntry("Max Goal", maxGoal)
+        )
+        val maxGoalLine = cartesian.line(maxGoalLineData)
+        maxGoalLine.name("Max Goal").color("#00FF00")  // Green line for Max Goal
+
+        // Set titles and labels
+        cartesian.title("Amount Spent by Category")
+        cartesian.xAxis(0).title("Category")
+        cartesian.yAxis(0).title("Amount Spent")
+        cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }")  // Format the amount
+
+        // Set up the chart view
+        anyChartView.setChart(cartesian)
     }
 }
+
+
+
+
+
+
 
