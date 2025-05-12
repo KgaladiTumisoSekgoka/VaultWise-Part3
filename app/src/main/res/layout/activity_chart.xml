@@ -25,6 +25,7 @@
         android:layout_width="71dp"
         android:layout_height="70dp"
         android:layout_marginStart="182dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="182dp"
         android:layout_marginBottom="128dp"
         android:background="@null"
@@ -33,6 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.791"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/anyChartView"
         app:srcCompat="@drawable/baseline_add_circle_24" />
 
     <ImageButton
@@ -98,15 +100,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/imageButton8" />
-
-    <Spinner
-        android:id="@+id/spinnerTimeRange"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

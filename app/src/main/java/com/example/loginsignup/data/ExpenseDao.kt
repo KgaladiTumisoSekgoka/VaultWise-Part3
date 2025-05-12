@@ -44,6 +44,30 @@ interface ExpenseDao
         val total: Double
     )
 
+    @Query("""
+    SELECT c.category_name, 
+           SUM(e.amount) AS total,
+           bg.min_goal,
+           bg.max_goal
+    FROM categories c
+    LEFT JOIN expenses e 
+        ON c.category_id = e.category_id 
+        AND e.user_id = :userId
+        AND e.date LIKE :month || '%'
+    LEFT JOIN budget_goals bg 
+        ON bg.user_id = :userId AND bg.month = :month
+    GROUP BY c.category_id
+""")
+    suspend fun getCategoryExpensesWithGoals(userId: Int, month: String): List<CategoryExpenseWithGoals>
+
+
+    data class CategoryExpenseWithGoals(
+        val category_name: String,
+        val total: Double?,
+        val min_goal: Double?,
+        val max_goal: Double?
+    )
+
     @Update
     fun updateExpense(expense: Expense)
 

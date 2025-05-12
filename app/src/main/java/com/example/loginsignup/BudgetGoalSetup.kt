@@ -67,7 +67,14 @@ class BudgetGoalSetup : AppCompatActivity() {
             override fun onItemSelected(adapter: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
                 val selectedMonth = months[position]
                 sharedPref.edit().putString("budget_month", selectedMonth).apply()
-                loadBudgetData(selectedMonth)
+                val currentYear = java.time.LocalDate.now().year
+                val monthNumber = position + 1
+                val formattedMonth = monthNumber.toString().padStart(2, '0')
+                val datePrefix = "$currentYear/$formattedMonth"
+
+                sharedPref.edit().putString("budget_month", selectedMonth).apply()
+                loadBudgetData(selectedMonth, datePrefix)
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -120,12 +127,12 @@ class BudgetGoalSetup : AppCompatActivity() {
         }
     }
 
-    private fun loadBudgetData(month: String) {
+    private fun loadBudgetData(month: String, datePrefix: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val goalDao = db.budgetGoalDao()
             val expenseDao = db.expenseDao()
             val goal = goalDao.getBudgetByUserAndMonth(userId, month)
-            val datePrefix = month  // month is already like "2025/04"
+            //val datePrefix = month  // month is already like "2025/04"
             val totalExpenses = expenseDao.getTotalExpensesForMonth(userId, datePrefix) ?: 0.0
 
 
@@ -147,13 +154,23 @@ class BudgetGoalSetup : AppCompatActivity() {
 
     private fun updateProgressBar(min: Double, max: Double, current: Double) {
         if (max > min) {
-            val progress = ((current - min) / (max - min) * 100).toInt().coerceIn(0, 100)
+            val progress = (current / max * 100).toInt().coerceIn(0, 100)
             progressBar.progress = progress
-            progressText.text = "Progress: $progress%"
+            progressText.text = "Progress: $progress%\nSpent: R$current / R$max"
+
+            val colorRes = when {
+                progress < 50 -> R.color.blue       // Safe zone
+                progress in 50..79 -> R.color.orange // Warning zone
+                else -> R.color.red                 // Danger zone
+            }
+
+            progressBar.progressTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(this, colorRes))
         } else {
             progressBar.progress = 0
             progressText.text = "Invalid goal range"
+            progressBar.progressTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray))
         }
     }
-
 }
