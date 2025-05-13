@@ -4,10 +4,12 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.LottieDrawable
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.BudgetGoal
 import kotlinx.coroutines.CoroutineScope
@@ -90,6 +92,11 @@ class BudgetGoalSetup : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (minGoal > maxGoal) {
+                Toast.makeText(this, "Min goal cannot be greater than Max goal", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             CoroutineScope(Dispatchers.IO).launch {
                 val dao = db.budgetGoalDao()
                 val existingGoal = dao.getBudgetByUserAndMonth(userId, selectedMonth)
@@ -113,6 +120,8 @@ class BudgetGoalSetup : AppCompatActivity() {
                 // Switch back to the main thread to show toast
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@BudgetGoalSetup, "Budget has been updated successfully", Toast.LENGTH_SHORT).show()
+                    // Refresh the UI (clear the fields and reset the progress bar)
+                    refreshPage()
                 }
             }
         }
@@ -127,26 +136,78 @@ class BudgetGoalSetup : AppCompatActivity() {
         }
     }
 
+
+    private fun refreshPage() {
+        minGoalEditText.text.clear()  // Clear the minGoal input field
+        maxGoalEditText.text.clear()  // Clear the maxGoal input field
+        monthSpinner.setSelection(0)  // Reset month spinner to default selection
+        progressBar.progress = 0  // Reset progress bar to 0
+        progressText.text = ""  // Clear the progress text
+    }
     private fun loadBudgetData(month: String, datePrefix: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val goalDao = db.budgetGoalDao()
             val expenseDao = db.expenseDao()
             val goal = goalDao.getBudgetByUserAndMonth(userId, month)
-            //val datePrefix = month  // month is already like "2025/04"
             val totalExpenses = expenseDao.getTotalExpensesForMonth(userId, datePrefix) ?: 0.0
 
-
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 if (goal != null) {
                     minGoalEditText.setText(goal.minGoal.toString())
                     maxGoalEditText.setText(goal.maxGoal.toString())
 
                     updateProgressBar(goal.minGoal, goal.maxGoal, totalExpenses)
+
+                    val lottieView = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView)
+                    val lottieCard = findViewById<androidx.cardview.widget.CardView>(R.id.lottieCard)
+
+                    val warningCard = findViewById<androidx.cardview.widget.CardView>(R.id.lottieCard2)
+                    val warningLottieView = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView2)
+                    val warningMessage = findViewById<TextView>(R.id.warningMessage)
+
+                    // Calculate percentage spent
+                    val percentageSpent = (totalExpenses / goal.maxGoal) * 100
+
+                    // Show warning animation if 90% or more of the max goal is reached (but still under 100%)
+                    if (percentageSpent in 90.0..100.0) {
+                        warningCard.visibility = View.VISIBLE  // Show warning card
+                        warningLottieView.repeatCount = 2  // Repeat the animation 3 times (since the count starts from 0)
+                        warningLottieView.repeatMode = LottieDrawable.RESTART  // Restart animation on each repeat
+                        warningLottieView.playAnimation() // Play warning animation
+                        warningMessage.text = "⚠️ You’ve spent 90% or more of your budget!" // Display warning message
+                    } else {
+                        warningCard.visibility = View.GONE  // Hide warning card if less than 90%
+                    }
+
+                    // 🎉 If within budget range (1% to 89%), show animation and congrats message
+                    if (percentageSpent in 1.0..89.9) {
+                        lottieCard.visibility = View.VISIBLE
+                        lottieView.visibility = View.VISIBLE
+
+                        lottieView.repeatCount = 2
+                        lottieView.repeatMode = LottieDrawable.RESTART
+                        lottieView.playAnimation()
+
+                        lottieView.addAnimatorListener(object : android.animation.AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: android.animation.Animator) {
+                                lottieCard.visibility = View.GONE
+                            }
+                        })
+
+                        Toast.makeText(this@BudgetGoalSetup, "🎉 Congrats! You’re doing great and staying within budget!", Toast.LENGTH_LONG).show()
+                    } else {
+                        lottieCard.visibility = View.GONE
+                        lottieView.visibility = View.GONE
+                    }
                 } else {
                     minGoalEditText.setText("")
                     maxGoalEditText.setText("")
                     progressBar.progress = 0
                     progressText.text = ""
+
+                    findViewById<androidx.cardview.widget.CardView>(R.id.lottieCard).visibility = View.GONE
+                    findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView).visibility = View.GONE
+                    findViewById<androidx.cardview.widget.CardView>(R.id.lottieCard2).visibility = View.GONE // Hide warning card if no goal
                 }
             }
         }

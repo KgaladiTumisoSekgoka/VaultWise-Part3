@@ -83,5 +83,9 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    //Lottie for animations
+    implementation("com.github.LottieFiles:dotlottie-android:0.5.0")
+    implementation("com.airbnb.android:lottie:5.2.0")
 }
 
