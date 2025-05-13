@@ -80,6 +80,9 @@ class HomeScreen : AppCompatActivity() {
         findViewById<ImageButton>(R.id.imageButton22).setOnClickListener {
             startActivity(Intent(this, BudgetGoalSetup::class.java))
         }
+        findViewById<ImageButton>(R.id.imageButton29).setOnClickListener {
+            startActivity(Intent(this, MyRewards::class.java))
+        }
         findViewById<ImageButton>(R.id.imageButton4).setOnClickListener {
             startActivity(Intent(this, Transactions::class.java))
         }
