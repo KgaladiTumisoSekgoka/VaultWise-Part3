@@ -1,6 +1,8 @@
 package com.example.loginsignup
 
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +38,19 @@ class MyRewards : AppCompatActivity() {
         //insertDummyData()
         insertDummyDataIfNeeded()
         loadRewards()
+
+        val streakCard = findViewById<FrameLayout>(R.id.streakCardContainer)
+
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            val streak = db.streakDao().getStreak(userId)
+            if (streak != null && streak.currentStreak >= 2) {
+                withContext(Dispatchers.Main) {
+                    streakCard.visibility = View.VISIBLE
+                }
+            }
+        }
+
     }
 
     /*// Insert dummy data into the database
@@ -141,7 +156,7 @@ class MyRewards : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun checkAndAwardStepMaster() {
         lifecycleScope.launch {
             try {

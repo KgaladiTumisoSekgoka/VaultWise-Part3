@@ -22,6 +22,7 @@ import com.example.loginsignup.data.Category
 import com.example.loginsignup.data.Expense
 import com.example.loginsignup.data.ExpenseDao
 import com.example.loginsignup.data.Reward
+import com.example.loginsignup.data.Streak
 import com.example.loginsignup.databinding.ActivityAddExpenseBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -214,6 +215,39 @@ class AddExpense : AppCompatActivity() {
                             rewardTitle = "Wellness Warrior",
                             rewardDescription = "You’ve taken steps toward your health. Keep it up!",
                             iconResId = R.drawable.wellness_badge // make sure this icon exists
+                        )
+                        rewardDao.insertReward(reward)
+                    }
+                }
+
+                val streakDao = db.streakDao()
+                val today = getTodayDate()
+                val yesterday = getYesterdayDate()
+                val existingStreak = streakDao.getStreak(userId)
+
+                val updatedStreak = when {
+                    existingStreak == null -> Streak(user_id = userId, lastLoggedDate = today, currentStreak = 1)
+                    existingStreak.lastLoggedDate == today -> existingStreak // already logged today
+                    existingStreak.lastLoggedDate == yesterday -> {
+                        Streak(user_id = userId, lastLoggedDate = today, currentStreak = existingStreak.currentStreak + 1)
+                    }
+                    else -> Streak(user_id = userId, lastLoggedDate = today, currentStreak = 1)
+                }
+
+
+                streakDao.insertOrUpdateStreak(updatedStreak)
+
+
+                if (updatedStreak.currentStreak == 7) {
+                    val rewardDao = db.rewardDao()
+                    val alreadyAwarded = rewardDao.getRewardByTitle(userId, "7-Day Streak")
+                    if (alreadyAwarded == null) {
+                        val reward = Reward(
+                            user_id = userId,
+                            month = getCurrentMonth(),
+                            rewardTitle = "7-Day Streak",
+                            rewardDescription = "🔥 Logged expenses 7 days in a row!",
+                            iconResId = R.drawable.fire // make sure this icon exists
                         )
                         rewardDao.insertReward(reward)
                     }
