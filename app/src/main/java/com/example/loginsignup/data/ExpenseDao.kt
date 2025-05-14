@@ -74,6 +74,16 @@ interface ExpenseDao
     @Query("SELECT DISTINCT date FROM expenses WHERE user_id = :userId ORDER BY date ASC")
     suspend fun getLoggedDatesForUser(userId: Int): List<String>
 
+    @Query("""
+    SELECT categories.category_name, SUM(expenses.amount) as total 
+    FROM expenses 
+    INNER JOIN categories ON expenses.category_id = categories.category_id 
+    WHERE expenses.user_id = :userId 
+    AND expenses.date LIKE :datePrefix || '%'
+    GROUP BY categories.category_id
+""")
+    suspend fun getExpensesByCategoryForPeriod(userId: Int, datePrefix: String): List<ExpenseDao.CategoryExpenseTotal>
+
     @Update
     fun updateExpense(expense: Expense)
 

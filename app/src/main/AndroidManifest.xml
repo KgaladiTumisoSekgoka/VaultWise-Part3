@@ -21,6 +21,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".MaxandMinGoalView"
+            android:exported="false" />
+        <activity
             android:name=".MyRewards"
             android:exported="false" />
         <activity
