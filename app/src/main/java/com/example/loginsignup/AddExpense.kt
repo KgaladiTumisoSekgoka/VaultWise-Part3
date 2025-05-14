@@ -21,6 +21,7 @@ import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.Category
 import com.example.loginsignup.data.Expense
 import com.example.loginsignup.data.ExpenseDao
+import com.example.loginsignup.data.Reward
 import com.example.loginsignup.databinding.ActivityAddExpenseBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -163,6 +164,60 @@ class AddExpense : AppCompatActivity() {
                 )
                 // Insert the expense into the database
                 expenseDao.insertExpense(expense)
+                // After inserting the expense
+                val dateStrings = expenseDao.getLoggedDatesForUser(userId)
+                val dates = dateStrings.mapNotNull {
+                    try {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }.sorted()
+
+                var streak = 1
+                for (i in 1 until dates.size) {
+                    val diff = (dates[i].time - dates[i - 1].time) / (1000 * 60 * 60 * 24)
+                    if (diff == 1L) {
+                        streak++
+                        if (streak == 7) break
+                    } else if (diff > 1L) {
+                        streak = 1
+                    }
+                }
+
+                // Award badge if streak is 7
+                if (streak >= 7) {
+                    val rewardDao = db.rewardDao()
+                    val alreadyAwarded = rewardDao.getRewardByTitle(userId, "Step Master")
+                    if (alreadyAwarded == null) {
+                        val reward = Reward(
+                            user_id = userId,
+                            month = SimpleDateFormat("MMMM", Locale.getDefault()).format(System.currentTimeMillis()),
+                            rewardTitle = "Step Master",
+                            rewardDescription = "Logged expenses for 7 days in a row!",
+                            iconResId = R.drawable.step_master
+                        )
+                        rewardDao.insertReward(reward)
+                    }
+                }
+
+                val wellnessCategories = listOf("Health", "Fitness", "Medical")
+                val usedWellnessCategory = customCategoryText.ifEmpty { selectedCategory }
+
+                if (wellnessCategories.any { it.equals(usedWellnessCategory, ignoreCase = true) }) {
+                    val rewardDao = db.rewardDao()
+                    val alreadyAwarded = rewardDao.getRewardByTitle(userId, "Wellness Warrior")
+                    if (alreadyAwarded == null) {
+                        val reward = Reward(
+                            user_id = userId,
+                            month = getCurrentMonth(),
+                            rewardTitle = "Wellness Warrior",
+                            rewardDescription = "You’ve taken steps toward your health. Keep it up!",
+                            iconResId = R.drawable.wellness_badge // make sure this icon exists
+                        )
+                        rewardDao.insertReward(reward)
+                    }
+                }
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()

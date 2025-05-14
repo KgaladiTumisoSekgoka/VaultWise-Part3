@@ -33,11 +33,12 @@ class MyRewards : AppCompatActivity() {
         rewardDao = AppDatabase.getDatabase(this).rewardDao()
 
         // Insert dummy data and then load rewards
-        insertDummyData()
+        //insertDummyData()
+        insertDummyDataIfNeeded()
         loadRewards()
     }
 
-    // Insert dummy data into the database
+    /*// Insert dummy data into the database
     private fun insertDummyData() {
         lifecycleScope.launch {
             try {
@@ -79,6 +80,45 @@ class MyRewards : AppCompatActivity() {
                 Toast.makeText(this@MyRewards, "Failed to insert dummy data", Toast.LENGTH_SHORT).show()
             }
         }
+    }*/
+    private fun insertDummyDataIfNeeded() {
+        lifecycleScope.launch {
+            val existing = withContext(Dispatchers.IO) {
+                rewardDao.getRewardsForUser(userId)
+            }
+
+            if (existing.isEmpty()) {
+                val dummyRewards = listOf(
+                    Reward(
+                        user_id = userId,
+                        month = "May",
+                        rewardTitle = "Step Master",
+                        rewardDescription = "Awarded for walking 10,000 steps!",
+                        dateEarned = System.currentTimeMillis(),
+                        iconResId = R.drawable.step_master// Image for Wellness Warrior
+                    ),
+                    Reward(
+                        user_id = userId,
+                        month = "April",
+                        rewardTitle = "Budget Boss",
+                        rewardDescription = "Awarded for staying under budget this month!",
+                        dateEarned = System.currentTimeMillis(),
+                        iconResId = R.drawable.budget_boss // Image for Step Master
+                    ),
+                    Reward(
+                        user_id = userId,
+                        month = "March",
+                        rewardTitle = "Wellness Warrior",
+                        rewardDescription = "Awarded for maintaining a healthy lifestyle!",
+                        dateEarned = System.currentTimeMillis(),
+                        iconResId = R.drawable.wellness_badge// Image for Wellness Warrior
+                    )
+                )
+                withContext(Dispatchers.IO) {
+                    rewardDao.insertAll(dummyRewards)
+                }
+            }
+        }
     }
 
     // Load rewards from the database
@@ -98,6 +138,62 @@ class MyRewards : AppCompatActivity() {
 
             } catch (e: Exception) {
                 Toast.makeText(this@MyRewards, "Failed to load rewards", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    private fun checkAndAwardStepMaster() {
+        lifecycleScope.launch {
+            try {
+                val expenseDao = AppDatabase.getDatabase(this@MyRewards).expenseDao()
+                val rewardDao = AppDatabase.getDatabase(this@MyRewards).rewardDao()
+
+                val dateStrings = withContext(Dispatchers.IO) {
+                    expenseDao.getLoggedDatesForUser(userId)
+                }
+
+                val dates = dateStrings.mapNotNull {
+                    try {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }.sorted()
+
+                var streak = 1
+                for (i in 1 until dates.size) {
+                    val diff = (dates[i].time - dates[i - 1].time) / (1000 * 60 * 60 * 24)
+                    if (diff == 1L) {
+                        streak++
+                        if (streak == 7) break
+                    } else if (diff > 1L) {
+                        streak = 1
+                    }
+                }
+
+                if (streak >= 7) {
+                    val alreadyAwarded = withContext(Dispatchers.IO) {
+                        rewardDao.getRewardByTitle(userId, "Step Master")
+                    }
+
+                    if (alreadyAwarded == null) {
+                        val reward = Reward(
+                            user_id = userId,
+                            month = SimpleDateFormat("MMMM", Locale.getDefault()).format(System.currentTimeMillis()),
+                            rewardTitle = "Step Master",
+                            rewardDescription = "Logged expenses for 7 days in a row!",
+                            iconResId = R.drawable.step_master
+                        )
+
+                        withContext(Dispatchers.IO) {
+                            rewardDao.insertReward(reward)
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this@MyRewards, "Failed to check Step Master badge", Toast.LENGTH_SHORT).show()
             }
         }
     }

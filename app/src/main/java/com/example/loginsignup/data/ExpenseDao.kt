@@ -71,6 +71,8 @@ interface ExpenseDao
     @Query("SELECT EXISTS(SELECT 1 FROM expenses WHERE user_id = :userId AND date LIKE :date || '%')")
     suspend fun hasLoggedExpenseOnDate(userId: Int, date: String): Boolean
 
+    @Query("SELECT DISTINCT date FROM expenses WHERE user_id = :userId ORDER BY date ASC")
+    suspend fun getLoggedDatesForUser(userId: Int): List<String>
 
     @Update
     fun updateExpense(expense: Expense)

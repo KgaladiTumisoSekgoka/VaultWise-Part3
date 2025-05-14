@@ -21,6 +21,8 @@ interface RewardDao {
     @Query("SELECT EXISTS(SELECT 1 FROM rewards WHERE user_id = :userId AND month = :month) LIMIT 1")
     suspend fun hasReceivedBudgetReward(userId: Int, month: String): Boolean
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(rewards: List<Reward>)
 
     @Update
     suspend fun updateReward(reward: Reward)

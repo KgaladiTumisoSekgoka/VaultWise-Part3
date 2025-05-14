@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [User::class, BudgetGoal::class, Expense::class, Category::class, Reward::class],
+@Database(entities = [User::class, BudgetGoal::class, Expense::class, Category::class, Reward::class, Streak::class],
     version = 8)
 
 abstract class AppDatabase : RoomDatabase() {

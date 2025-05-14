@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.preference.PreferenceManager
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity()
 {
@@ -41,5 +43,15 @@ class MainActivity : AppCompatActivity()
             Toast.makeText(this@MainActivity , "Opening Signup page", Toast.LENGTH_LONG).show()
         }
     }
+    fun getTodayDate(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return LocalDate.now().format(formatter)
+    }
+
+    fun getYesterdayDate(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return LocalDate.now().minusDays(1).format(formatter)
+    }
+
 }
 
