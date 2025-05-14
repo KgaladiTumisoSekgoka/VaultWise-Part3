@@ -68,6 +68,10 @@ interface ExpenseDao
         val max_goal: Double?
     )
 
+    @Query("SELECT EXISTS(SELECT 1 FROM expenses WHERE user_id = :userId AND date LIKE :date || '%')")
+    suspend fun hasLoggedExpenseOnDate(userId: Int, date: String): Boolean
+
+
     @Update
     fun updateExpense(expense: Expense)
 

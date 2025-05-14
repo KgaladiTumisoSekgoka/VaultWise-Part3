@@ -9,9 +9,11 @@ import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieDrawable
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.BudgetGoal
+import com.example.loginsignup.data.Reward
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +38,8 @@ class BudgetGoalSetup : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_budget_goal_setup)
 
+
+
         db = AppDatabase.getDatabase(applicationContext)
 
         // UI Elements
@@ -52,6 +56,8 @@ class BudgetGoalSetup : AppCompatActivity() {
         monthSpinner = findViewById(R.id.spinner_month)
 
         monthSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, months)
+
+
 
         btnBack.setOnClickListener {
             startActivity(Intent(this, HomeScreen::class.java))
@@ -212,6 +218,8 @@ class BudgetGoalSetup : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun updateProgressBar(min: Double, max: Double, current: Double) {
         if (max > min) {

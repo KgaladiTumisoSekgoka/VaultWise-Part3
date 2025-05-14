@@ -23,5 +23,6 @@ data class Reward(
     @ColumnInfo(name = "month") val month: String,
     @ColumnInfo(name = "rewardTitle") val rewardTitle: String,
     @ColumnInfo(name = "rewardDescription") val rewardDescription: String,
-    @ColumnInfo(name = "dateEarned") val dateEarned: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "dateEarned") val dateEarned: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "iconResId") val iconResId: Int // Add iconResId to store image reference
 )

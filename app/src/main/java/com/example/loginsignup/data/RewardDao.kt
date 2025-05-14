@@ -15,4 +15,18 @@ interface RewardDao {
     @Query("SELECT * FROM rewards WHERE user_id = :userId")
     suspend fun getRewardsForUser(userId: Int): List<Reward>
 
+    @Query("SELECT * FROM rewards WHERE user_id = :userId AND rewardTitle = :title LIMIT 1")
+    fun getRewardByTitle(userId: Int, title: String): Reward?
+
+    @Query("SELECT EXISTS(SELECT 1 FROM rewards WHERE user_id = :userId AND month = :month) LIMIT 1")
+    suspend fun hasReceivedBudgetReward(userId: Int, month: String): Boolean
+
+
+    @Update
+    suspend fun updateReward(reward: Reward)
+
+    @Delete
+    suspend fun deleteReward(reward: Reward)
+
+
 }
