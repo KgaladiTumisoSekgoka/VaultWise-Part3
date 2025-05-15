@@ -214,7 +214,7 @@ class AddExpense : AppCompatActivity() {
                             month = getCurrentMonth(),
                             rewardTitle = "Wellness Warrior",
                             rewardDescription = "You’ve taken steps toward your health. Keep it up!",
-                            iconResId = R.drawable.wellness_badge // make sure this icon exists
+                            iconResId = R.drawable.wellness_badge
                         )
                         rewardDao.insertReward(reward)
                     }
@@ -234,9 +234,7 @@ class AddExpense : AppCompatActivity() {
                     else -> Streak(user_id = userId, lastLoggedDate = today, currentStreak = 1)
                 }
 
-
                 streakDao.insertOrUpdateStreak(updatedStreak)
-
 
                 if (updatedStreak.currentStreak == 7) {
                     val rewardDao = db.rewardDao()
@@ -311,6 +309,7 @@ class AddExpense : AppCompatActivity() {
         stream.close()
         return file.absolutePath
     }
+
     private fun showDatePicker(){
         val datePickerDialog = DatePickerDialog(this,{DatePicker, year:Int, monthOfYear:Int, dayofMonth:Int ->
             val selectedDate = Calendar.getInstance()
@@ -325,6 +324,7 @@ class AddExpense : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
+
     fun getCurrentMonth(): String {
         val calendar = Calendar.getInstance()
         val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
@@ -343,5 +343,4 @@ class AddExpense : AppCompatActivity() {
         }
         return uri.lastPathSegment ?: "Unknown File"
     }
-
 }

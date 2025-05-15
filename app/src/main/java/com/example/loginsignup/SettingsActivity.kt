@@ -58,6 +58,13 @@ class SettingsActivity : AppCompatActivity() {
                 requireActivity().recreate()
                 true
             }
+            // Add your Help & Support preference click listener here:
+            val helpSupportPref = findPreference<Preference>("help")
+            helpSupportPref?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), HelpandSupport::class.java)
+                startActivity(intent)
+                true
+            }
         }
         override fun onResume() {
             super.onResume()

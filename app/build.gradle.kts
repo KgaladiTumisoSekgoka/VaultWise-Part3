@@ -73,19 +73,22 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.7.0")    // for Kotlin support
     kapt ("androidx.room:room-compiler:2.7.0") // For Kotlin code generation
 
+
     // Coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    //Glide
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 
     implementation("com.google.code.gson:gson:2.10.1")
 
     //Lottie for animations
     implementation("com.github.LottieFiles:dotlottie-android:0.5.0")
     implementation("com.airbnb.android:lottie:5.2.0")
+
 }
 
