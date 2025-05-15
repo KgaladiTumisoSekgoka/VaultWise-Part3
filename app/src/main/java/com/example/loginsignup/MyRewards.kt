@@ -35,7 +35,6 @@ class MyRewards : AppCompatActivity() {
         rewardDao = AppDatabase.getDatabase(this).rewardDao()
 
         // Insert dummy data and then load rewards
-        //insertDummyData()
         insertDummyDataIfNeeded()
         loadRewards()
 
@@ -53,49 +52,6 @@ class MyRewards : AppCompatActivity() {
 
     }
 
-    /*// Insert dummy data into the database
-    private fun insertDummyData() {
-        lifecycleScope.launch {
-            try {
-                val dummyRewards = listOf(
-                    Reward(
-                        user_id = userId,
-                        month = "May",
-                        rewardTitle = "Step Master",
-                        rewardDescription = "Awarded for walking 10,000 steps!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.step_master// Image for Wellness Warrior
-                    ),
-                    Reward(
-                        user_id = userId,
-                        month = "April",
-                        rewardTitle = "Budget Boss",
-                        rewardDescription = "Awarded for staying under budget this month!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.step_master // Image for Step Master
-                    ),
-                    Reward(
-                        user_id = userId,
-                        month = "March",
-                        rewardTitle = "Wellness Warrior",
-                        rewardDescription = "Awarded for maintaining a healthy lifestyle!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.budget_boss// Image for Wellness Warrior
-                    )
-                )
-
-                // Insert the dummy data
-                withContext(Dispatchers.IO) {
-                    dummyRewards.forEach { reward ->
-                        rewardDao.insertReward(reward)
-                    }
-                }
-            } catch (e: Exception) {
-                // Show error message in case of failure
-                Toast.makeText(this@MyRewards, "Failed to insert dummy data", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }*/
     private fun insertDummyDataIfNeeded() {
         lifecycleScope.launch {
             val existing = withContext(Dispatchers.IO) {

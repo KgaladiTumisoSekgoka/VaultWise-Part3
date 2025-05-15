@@ -1,5 +1,6 @@
 package com.example.loginsignup
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +29,9 @@ class RewardAdapter(private val rewards: List<Reward>) : RecyclerView.Adapter<Re
         val formattedDate = dateFormat.format(Date(reward.dateEarned))
         holder.date.text = formattedDate
 
-        // Assuming rewardIcon is an int or drawable resource ID
-        // If you have a resource ID for each reward, use it here
-        // holder.rewardIcon.setImageResource(reward.iconResId)
-        // Set the correct image based on the iconResId
         holder.rewardIcon.setImageResource(reward.iconResId)
+        Log.d("RewardAdapter", "Icon resource ID: ${reward.iconResId}")
+
     }
 
     override fun getItemCount(): Int = rewards.size
