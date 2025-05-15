@@ -50,13 +50,14 @@
         app:layout_constraintTop_toBottomOf="@id/titleText2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
     <ImageView
         android:id="@+id/bmwGif"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/submitButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

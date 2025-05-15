@@ -45,16 +45,18 @@ class HelpandSupport : AppCompatActivity() {
             }
 
             if (problem.contains("bmw", ignoreCase = true)) {
-                // Show GIF and play BMW sound
+                // Show GIF and play BOTH sounds
                 bmwGif.visibility = ImageView.VISIBLE
                 Glide.with(this).asGif().load(R.drawable.bmw_gif).into(bmwGif)
+
+                // Play both sounds
+                funnySound?.start()
                 bmwSound?.start()
 
                 // Hide GIF after 5 seconds
                 bmwGif.postDelayed({ bmwGif.visibility = ImageView.GONE }, 5000)
             } else {
-                // Play funny sound
-                funnySound?.start()
+                // Don't play any sound or show GIF
                 bmwGif.visibility = ImageView.GONE
             }
 
