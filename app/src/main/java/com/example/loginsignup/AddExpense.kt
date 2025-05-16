@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.Category
@@ -34,6 +35,9 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+
 
 class AddExpense : AppCompatActivity() {
 
@@ -144,9 +148,9 @@ class AddExpense : AppCompatActivity() {
             }
 
             val username = prefs.getString("username", "User")
-            val homeIntent = Intent(this, HomeScreen::class.java)
+            /*val homeIntent = Intent(this, HomeScreen::class.java)
             homeIntent.putExtra("username", username)
-            startActivity(homeIntent)
+            startActivity(homeIntent)*/
 
             // Insert the expense asynchronously
             lifecycleScope.launch(Dispatchers.IO) {
@@ -301,12 +305,29 @@ class AddExpense : AppCompatActivity() {
                         Log.d("AddExpense", "7-Day Streak already awarded")
                     }
                 }
-
+                val cardView = findViewById<CardView>(R.id.addExpenselottie)
+                val lottieView = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView4)
+                val warningText = findViewById<TextView>(R.id.warningMessage)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@AddExpense, "Expense added", Toast.LENGTH_SHORT).show()
-                    Log.d("AddExpense", "Switching to Transactions activity")
-                    startActivity(Intent(this@AddExpense, Transactions::class.java))
+                    // Optional: Update text dynamically
+                    warningText.text = "Expense Added! 💸"
+
+                    cardView.visibility = View.VISIBLE
+                    lottieView.playAnimation()
+
+                    lottieView.addAnimatorListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            cardView.visibility = View.GONE
+
+                            // Now navigate after the animation finishes
+                            val homeIntent = Intent(this@AddExpense, Transactions::class.java)
+                            homeIntent.putExtra("username", username)
+                            startActivity(homeIntent)
+                            finish() // Optional: Prevent going back to AddExpense
+                        }
+                    })
                 }
+
             }
         }
 

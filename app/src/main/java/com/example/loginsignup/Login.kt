@@ -2,6 +2,7 @@ package com.example.loginsignup
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -14,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.UserDao
 import kotlinx.coroutines.launch
+import com.airbnb.lottie.LottieAnimationView
 
 class Login : AppCompatActivity() {
     private lateinit var userDao: UserDao
@@ -33,11 +35,21 @@ class Login : AppCompatActivity() {
         btnLogin.setOnClickListener {
             val username = usernameField.text.toString()
             val password = passwordField.text.toString()
+            val lottieCard = findViewById<View>(R.id.loginlottie)
+            val lottieAnim = findViewById<LottieAnimationView>(R.id.lottieAnimationView2)
 
             //Comment
             lifecycleScope.launch {
                 val user = userDao.login(username, password)
                 if (user != null) {
+                    // Show and play the Lottie animation
+                    runOnUiThread {
+                        lottieCard.visibility = View.VISIBLE
+                        lottieAnim.playAnimation()
+                    }
+
+                    // Optional delay to allow the animation to play before navigating
+                    kotlinx.coroutines.delay(2000) // 2 seconds (adjust as needed)
                     // ✅ Save user_id to SharedPreferences
                     val prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                     prefs.edit().putInt("USER_ID", user.user_id).apply()

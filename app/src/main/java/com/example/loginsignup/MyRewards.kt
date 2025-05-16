@@ -1,6 +1,7 @@
 package com.example.loginsignup
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -35,7 +36,7 @@ class MyRewards : AppCompatActivity() {
         rewardDao = AppDatabase.getDatabase(this).rewardDao()
 
         // Insert dummy data and then load rewards
-        insertDummyDataIfNeeded()
+        //insertDummyDataIfNeeded()
         loadRewards()
 
         val streakCard = findViewById<FrameLayout>(R.id.streakCardContainer)
@@ -49,14 +50,17 @@ class MyRewards : AppCompatActivity() {
                 }
             }
         }
-
     }
 
-    private fun insertDummyDataIfNeeded() {
+    /*private fun insertDummyDataIfNeeded() {
+        Log.d("RewardInsert", "Checking if dummy rewards need to be inserted...")
+
         lifecycleScope.launch {
             val existing = withContext(Dispatchers.IO) {
                 rewardDao.getRewardsForUser(userId)
             }
+
+            Log.d("RewardInsert", "Found ${existing.size} rewards for user $userId.")
 
             if (existing.isEmpty()) {
                 val dummyRewards = listOf(
@@ -66,7 +70,7 @@ class MyRewards : AppCompatActivity() {
                         rewardTitle = "Step Master",
                         rewardDescription = "Awarded for walking 10,000 steps!",
                         dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.step_master// Image for Wellness Warrior
+                        iconResId = R.drawable.step_master
                     ),
                     Reward(
                         user_id = userId,
@@ -74,7 +78,7 @@ class MyRewards : AppCompatActivity() {
                         rewardTitle = "Budget Boss",
                         rewardDescription = "Awarded for staying under budget this month!",
                         dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.budget_boss // Image for Step Master
+                        iconResId = R.drawable.budget_boss
                     ),
                     Reward(
                         user_id = userId,
@@ -82,15 +86,22 @@ class MyRewards : AppCompatActivity() {
                         rewardTitle = "Wellness Warrior",
                         rewardDescription = "Awarded for maintaining a healthy lifestyle!",
                         dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.wellness_badge// Image for Wellness Warrior
+                        iconResId = R.drawable.wellness_badge
                     )
                 )
+
+                Log.d("RewardInsert", "Inserting ${dummyRewards.size} dummy rewards for user $userId.")
+
                 withContext(Dispatchers.IO) {
                     rewardDao.insertAll(dummyRewards)
                 }
+
+                Log.d("RewardInsert", "Dummy rewards successfully inserted.")
+            } else {
+                Log.d("RewardInsert", "Skipping insertion — rewards already exist.")
             }
         }
-    }
+    }*/
 
     // Load rewards from the database
     private fun loadRewards() {
