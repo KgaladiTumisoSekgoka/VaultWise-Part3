@@ -208,6 +208,7 @@ class AddExpense : AppCompatActivity() {
                 Log.d("AddExpense", "Parsed and sorted dates: $dates")
 
                 var streak = 1
+                var newRewardGranted = false
                 val rewardDao = db.rewardDao()
 
                 // Award for logging at least one consecutive day
@@ -222,6 +223,7 @@ class AddExpense : AppCompatActivity() {
                         iconResId = R.drawable.streak_starter // <-- make sure this icon exists
                     )
                     rewardDao.insertReward(reward)
+                    newRewardGranted = true
                 }
 
                 for (i in 1 until dates.size) {
@@ -250,6 +252,7 @@ class AddExpense : AppCompatActivity() {
                             iconResId = R.drawable.step_master
                         )
                         rewardDao.insertReward(reward)
+                        newRewardGranted = true
                     } else {
                         Log.d("AddExpense", "Step Master already awarded")
                     }
@@ -272,6 +275,7 @@ class AddExpense : AppCompatActivity() {
                             iconResId = R.drawable.wellness_badge
                         )
                         rewardDao.insertReward(reward)
+                        newRewardGranted = true
                     }else {
                         Log.d("AddExpense", "Wellness Warrior already awarded")
                     }
@@ -320,26 +324,42 @@ class AddExpense : AppCompatActivity() {
                     }else {
                         Log.d("AddExpense", "7-Day Streak already awarded")
                     }
+                    newRewardGranted = true
                 }
+                // UI updates on Main Thread
                 val cardView = findViewById<CardView>(R.id.addExpenselottie)
                 val lottieView = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView4)
                 val warningText = findViewById<TextView>(R.id.warningMessage)
-                withContext(Dispatchers.Main) {
-                    // Optional: Update text dynamically
-                    warningText.text = "Expense Added! 💸"
 
+                // Reward Lottie
+                val rewardCardView = findViewById<CardView>(R.id.rewardlottie)
+                val rewardLottie = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieAnimationView97)
+                val rewardText = findViewById<TextView>(R.id.awardWinningMessage)
+
+                withContext(Dispatchers.Main) {
+                    warningText.text = "Expense Added! 💸"
                     cardView.visibility = View.VISIBLE
                     lottieView.playAnimation()
+
+                    if (newRewardGranted) {
+                        rewardText.text = "🎉 New Achievement Unlocked!"
+                        rewardCardView.visibility = View.VISIBLE
+                        rewardLottie.playAnimation()
+
+                        rewardLottie.addAnimatorListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                rewardCardView.visibility = View.GONE
+                            }
+                        })
+                    }
 
                     lottieView.addAnimatorListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
                             cardView.visibility = View.GONE
-
-                            // Now navigate after the animation finishes
                             val homeIntent = Intent(this@AddExpense, Transactions::class.java)
                             homeIntent.putExtra("username", username)
                             startActivity(homeIntent)
-                            finish() // Optional: Prevent going back to AddExpense
+                            finish()
                         }
                     })
                 }
