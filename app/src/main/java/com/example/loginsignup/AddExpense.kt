@@ -208,6 +208,22 @@ class AddExpense : AppCompatActivity() {
                 Log.d("AddExpense", "Parsed and sorted dates: $dates")
 
                 var streak = 1
+                val rewardDao = db.rewardDao()
+
+                // Award for logging at least one consecutive day
+                val startedReward = rewardDao.getRewardByTitle(userId, "Streak Starter")
+                if (startedReward == null) {
+                    Log.d("AddExpense", "Awarding Streak Starter badge")
+                    val reward = Reward(
+                        user_id = userId,
+                        month = SimpleDateFormat("MMMM", Locale.getDefault()).format(System.currentTimeMillis()),
+                        rewardTitle = "Streak Starter",
+                        rewardDescription = "You've started your daily logging streak!",
+                        iconResId = R.drawable.streak_starter // <-- make sure this icon exists
+                    )
+                    rewardDao.insertReward(reward)
+                }
+
                 for (i in 1 until dates.size) {
                     val diff = (dates[i].time - dates[i - 1].time) / (1000 * 60 * 60 * 24)
                     if (diff == 1L) {
@@ -220,10 +236,9 @@ class AddExpense : AppCompatActivity() {
                     }
                 }
 
-                // Award badge if streak is 7
-                if (streak >= 7) {
+                // Award Step Master if full 7-day streak is reached
+                if (streak >= 1) {
                     Log.d("AddExpense", "7-day streak detected")
-                    val rewardDao = db.rewardDao()
                     val alreadyAwarded = rewardDao.getRewardByTitle(userId, "Step Master")
                     if (alreadyAwarded == null) {
                         Log.d("AddExpense", "Awarding Step Master badge")
@@ -235,6 +250,7 @@ class AddExpense : AppCompatActivity() {
                             iconResId = R.drawable.step_master
                         )
                         rewardDao.insertReward(reward)
+                    } else {
                         Log.d("AddExpense", "Step Master already awarded")
                     }
                 }

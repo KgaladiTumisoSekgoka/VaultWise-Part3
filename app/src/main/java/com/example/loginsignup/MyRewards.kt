@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.loginsignup.data.AppDatabase
 import com.example.loginsignup.data.Reward
 import com.example.loginsignup.data.RewardDao
+import com.example.loginsignup.data.Streak
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,70 +39,25 @@ class MyRewards : AppCompatActivity() {
         // Insert dummy data and then load rewards
         //insertDummyDataIfNeeded()
         loadRewards()
+        checkAndAwardStepMaster()
 
         val streakCard = findViewById<FrameLayout>(R.id.streakCardContainer)
+        val inflater = layoutInflater
+        val streakView = inflater.inflate(R.layout.reward_streak_card, streakCard, false)
+        streakCard.addView(streakView)
 
+        // Show streak card when user logs any activity
         lifecycleScope.launch {
             val db = AppDatabase.getDatabase(applicationContext)
-            val streak = db.streakDao().getStreak(userId)
-            if (streak != null && streak.currentStreak >= 2) {
+            val dates = db.expenseDao().getLoggedDatesForUser(userId)
+            if (dates.isNotEmpty()) {
                 withContext(Dispatchers.Main) {
                     streakCard.visibility = View.VISIBLE
                 }
             }
         }
+
     }
-
-    /*private fun insertDummyDataIfNeeded() {
-        Log.d("RewardInsert", "Checking if dummy rewards need to be inserted...")
-
-        lifecycleScope.launch {
-            val existing = withContext(Dispatchers.IO) {
-                rewardDao.getRewardsForUser(userId)
-            }
-
-            Log.d("RewardInsert", "Found ${existing.size} rewards for user $userId.")
-
-            if (existing.isEmpty()) {
-                val dummyRewards = listOf(
-                    Reward(
-                        user_id = userId,
-                        month = "May",
-                        rewardTitle = "Step Master",
-                        rewardDescription = "Awarded for walking 10,000 steps!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.step_master
-                    ),
-                    Reward(
-                        user_id = userId,
-                        month = "April",
-                        rewardTitle = "Budget Boss",
-                        rewardDescription = "Awarded for staying under budget this month!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.budget_boss
-                    ),
-                    Reward(
-                        user_id = userId,
-                        month = "March",
-                        rewardTitle = "Wellness Warrior",
-                        rewardDescription = "Awarded for maintaining a healthy lifestyle!",
-                        dateEarned = System.currentTimeMillis(),
-                        iconResId = R.drawable.wellness_badge
-                    )
-                )
-
-                Log.d("RewardInsert", "Inserting ${dummyRewards.size} dummy rewards for user $userId.")
-
-                withContext(Dispatchers.IO) {
-                    rewardDao.insertAll(dummyRewards)
-                }
-
-                Log.d("RewardInsert", "Dummy rewards successfully inserted.")
-            } else {
-                Log.d("RewardInsert", "Skipping insertion — rewards already exist.")
-            }
-        }
-    }*/
 
     // Load rewards from the database
     private fun loadRewards() {
@@ -164,11 +120,15 @@ class MyRewards : AppCompatActivity() {
                             month = SimpleDateFormat("MMMM", Locale.getDefault()).format(System.currentTimeMillis()),
                             rewardTitle = "Step Master",
                             rewardDescription = "Logged expenses for 7 days in a row!",
+                            dateEarned = System.currentTimeMillis(),
                             iconResId = R.drawable.step_master
                         )
 
                         withContext(Dispatchers.IO) {
                             rewardDao.insertReward(reward)
+                        }
+                        withContext(Dispatchers.Main) {
+                            loadRewards() // ✅ Refresh UI
                         }
                     }
                 }
@@ -179,5 +139,4 @@ class MyRewards : AppCompatActivity() {
             }
         }
     }
-
 }
