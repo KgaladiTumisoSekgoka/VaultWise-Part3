@@ -61,8 +61,7 @@ class Chart : AppCompatActivity() {
         val periodOptions = listOf("Today", "This Month", "This Quarter", "This Half-Year", "This Year")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, periodOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-
+        
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -86,7 +85,6 @@ class Chart : AppCompatActivity() {
                 }
 
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 

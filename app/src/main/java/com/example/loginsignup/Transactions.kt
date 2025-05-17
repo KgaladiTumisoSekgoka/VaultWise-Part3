@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.core.content.ContextCompat
 import android.Manifest
+import android.os.Build
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 
@@ -36,8 +37,7 @@ class Transactions : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var expenseDao: ExpenseDao
-    private val REQUEST_CODE_PERMISSION = 101
-    private val REQUEST_CODE_READ_STORAGE = 101
+    private val REQUEST_CODE_READ_STORAGE = 101 // Only need this one
     private lateinit var totalTextView: TextView
 
 
@@ -56,7 +56,7 @@ class Transactions : AppCompatActivity() {
 
         val btnTransact = findViewById<ImageButton>(R.id.imageButton14)
         btnTransact.setOnClickListener {
-            // Optional: Show a toast instead of restarting the same screen
+
         }
 
         val btnFAB = findViewById<ImageButton>(R.id.imageButton17)
@@ -85,6 +85,7 @@ class Transactions : AppCompatActivity() {
                 REQUEST_CODE_READ_STORAGE
             )
         }
+
         // ---- RecyclerView Setup ----
         recyclerView = findViewById(R.id.recyclerView) // Make sure your XML uses this ID
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -138,7 +139,8 @@ class Transactions : AppCompatActivity() {
                             }
                             transactionAdapter.updateData(updatedExpenses)
                         }
-                    }
+                    },
+                    onPermissionRequest = { checkAndRequestPermission() }
                 )
                 recyclerView.adapter = transactionAdapter
 
@@ -188,6 +190,18 @@ class Transactions : AppCompatActivity() {
         }
         dateSpinner.onItemSelectedListener = categorySpinner.onItemSelectedListener
     }
+
+    private fun checkAndRequestPermission() {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_CODE_READ_STORAGE)
+        }
+    }
     private fun filterTransactions(category: String, dateRange: String) {
         val userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("USER_ID", -1)
 
@@ -235,16 +249,18 @@ class Transactions : AppCompatActivity() {
             totalTextView.text = "Total: R${"%.2f".format(totalAmount)}"
         }
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == REQUEST_CODE_READ_STORAGE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Permission", "READ_EXTERNAL_STORAGE permission granted")
-            } else {
-                Log.d("Permission", "READ_EXTERNAL_STORAGE permission denied")
+        if (requestCode == REQUEST_CODE_READ_STORAGE &&
+            grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            if (::transactionAdapter.isInitialized) {
+                transactionAdapter.updateData(transactionAdapter.expenses)
             }
         }
+
     }
 }
 

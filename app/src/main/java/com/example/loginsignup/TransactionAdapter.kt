@@ -2,6 +2,7 @@ package com.example.loginsignup
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,12 +18,15 @@ import com.example.loginsignup.data.ExpenseWithCategory
 import java.io.File
 
 class TransactionAdapter(
-    private var expenses: List<ExpenseWithCategory>,
+    expenses: List<ExpenseWithCategory>,
     private val onItemClick: (ExpenseWithCategory) -> Unit,
     private val onEditClick: (ExpenseWithCategory) -> Unit,
-    private val onDeleteClick: (ExpenseWithCategory) -> Unit
+    private val onDeleteClick: (ExpenseWithCategory) -> Unit,
+    private val onPermissionRequest: () -> Unit // 👈 new callback
 ) : RecyclerView.Adapter<TransactionAdapter.ExpenseViewHolder>() {
 
+    var expenses: List<ExpenseWithCategory> = expenses
+        private set
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.txtTitle)
         private val description: TextView = itemView.findViewById(R.id.txtDescription)
@@ -54,8 +59,10 @@ class TransactionAdapter(
                 loadImage(expenseData.photoPath)
             } else {
                 Log.w("TransactionAdapter", "READ_EXTERNAL_STORAGE permission not granted.")
-                imageView.setImageResource(R.drawable.error_image)
+                imageView.setImageResource(R.drawable.blue_and_white_flat_illustrative_banking_finance_logo_removebg_preview)
+                onPermissionRequest() // 👈 request from activity
             }
+
         }
 
         private fun loadImage(imagePath: String?) {
