@@ -53,9 +53,15 @@ class TransactionAdapter(
             btnDelete.setOnClickListener { onDeleteClick(expense) }
 
             // Load image if permission granted
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
+
+            val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.READ_MEDIA_IMAGES
+            } else {
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            }
+
+            if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED)
+            {
                 loadImage(expenseData.photoPath)
             } else {
                 Log.w("TransactionAdapter", "READ_EXTERNAL_STORAGE permission not granted.")
@@ -68,12 +74,12 @@ class TransactionAdapter(
         private fun loadImage(imagePath: String?) {
             if (!imagePath.isNullOrBlank()) {
                 val file = File(imagePath)
-
                 // 👇 Add these logs to help debug
                 Log.d("AdapterDebug", "Checking image at path: $imagePath")
                 Log.d("AdapterDebug", "Does file exist? ${file.exists()}")
 
                 if (file.exists()) {
+                    Log.d("ImageLoad", "File exists. Loading with Glide.")
                     Glide.with(itemView.context)
                         .load(file)
                         .placeholder(R.drawable.loading_image)
@@ -82,6 +88,7 @@ class TransactionAdapter(
                 } else {
                     Log.e("ImageLoadError", "File does not exist: $imagePath")
                     imageView.setImageResource(R.drawable.default_image)
+                    Log.e("ImageLoad", "File doesn't exist.")
                 }
             } else {
                 Log.d("TransactionAdapter", "PhotoPath is null or blank.")

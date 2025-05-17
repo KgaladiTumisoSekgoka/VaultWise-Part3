@@ -253,15 +253,17 @@ class Transactions : AppCompatActivity() {
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == REQUEST_CODE_READ_STORAGE &&
             grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             if (::transactionAdapter.isInitialized) {
+                // 🔁 Force rebind all views
                 transactionAdapter.updateData(transactionAdapter.expenses)
             }
         }
-
     }
+
 }
 
 
